@@ -16,7 +16,7 @@ COPY metastore-site.xml $METASTORE_HOME/conf/metastore-site.xml
 
 RUN wget https://jdbc.postgresql.org/download/postgresql-42.2.5.jar --output-document=$METASTORE_HOME/lib/postgres-42.2.5.jar
 
-# ./schematool -dbType postgres -initSchema => run as initContainer in Helm or similar
+# ./schematool -dbType postgres -validate || ./schematool -dbType postgres -initSchema => run as initContainer in Helm or similar
 
 WORKDIR $METASTORE_HOME
 CMD [ "./bin/start-metastore" ]
