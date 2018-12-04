@@ -1,0 +1,10 @@
+Worker:
+  Replicas: 3
+  Image: jeffgrunewald/scos-spark
+  ImageTag: '1.1'
+Master:
+  ServiceType: LoadBalancer
+  Image: jeffgrunewald/scos-spark
+  ImageTag: '1.1'
+Zeppelin:
+  ServiceType: LoadBalancer
