@@ -30,19 +30,11 @@ spec:
           ports:
           - containerPort: 5432
             name: postgres
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-  labels:
-    app: postgres
-spec:
-  type: NodePort
-  ports:
-  - port: 5432
-    targetPort: postgres
-    name: postgres
-  selector:
-    app: postgres
+          volumeMounts:
+          - mountPath: /docker-entrypoint-initdb.d/init.sql
+            name: postgres-init
+            subPath: init.sql
+      volumes:
+      - name: postgres-init
+        configMap:
+          name: postgres-init

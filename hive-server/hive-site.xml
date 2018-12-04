@@ -3,11 +3,11 @@
 <configuration>
   <property>
     <name>hive.metastore.uris</name>
-    <value>thrift://localhost:9083</value>
+    <value>thrift://hive-metastore:9083</value>
   </property>
   <property>
     <name>javax.jdo.option.ConnectionURL</name>
-    <value>jdbc:postgresql://localhost/metastore</value>
+    <value>jdbc:postgresql://postgres/metastore</value>
   </property>
   <property>
     <name>javax.jdo.option.ConnectionDriverName</name>
@@ -15,7 +15,7 @@
   </property>
   <property>
     <name>javax.jdo.option.ConnectionUserName</name>
-    <value>postgres</value>
+    <value>hive</value>
   </property>
   <property>
     <name>javax.jdo.option.ConnectionPassword</name>

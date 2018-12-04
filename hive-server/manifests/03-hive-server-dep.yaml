@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hive-server
+  labels:
+    app: hive-server
+spec:
+  selector:
+    matchLabels:
+      app: hive-server
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: hive-server
+    spec:
+      containers:
+      - name: hive-server
+        image: jeffgrunewald/hive-server:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9999
+          name: hive-ui
+        - containerPort: 10000
+          name: hive-server
+        volumeMounts:
+        - mountPath: /usr/local/hive/conf/hive-site.xml
+          name: hive-site
+          subPath: hive-site.xml
+      volumes:
+      - name: hive-site
+        configMap:
+          name: hive-site
