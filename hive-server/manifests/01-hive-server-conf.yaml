@@ -45,11 +45,10 @@ data:
       <property>
         <name>hive.execution.engine</name>
         <value>spark</value>
-        <description>Chooses execution engine.</description>
       </property>
       <property>
         <name>spark.master</name>
-        <value>spark://spark-master:7077</value>
+        <value>k8s://https://kubernetes.default.svc.cluster.local:443</value>
       </property>
       <property>
         <name>spark.eventLog.enabled</name>
@@ -57,14 +56,54 @@ data:
       </property>
       <property>
         <name>spark.eventLog.dir</name>
-        <value>/tmp</value>
+        <value>/dev/stdout</value>
       </property>
       <property>
         <name>spark.executor.memory</name>
-        <value>512m</value>
+        <value>1g</value>
       </property>
       <property>
         <name>spark.serializer</name>
         <value>org.apache.spark.serializer.KryoSerializer</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.namespace</name>
+        <value>default</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.container.image</name>
+        <value>gcr.io/cloud-solutions-images/spark:v2.3.0-gcs</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.container.image.pullPolicy</name>
+        <value>IfNotPresent</value>
+      </property>
+      <property>
+        <name>spark.executor.instances</name>
+        <value>2</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.allocation.batch.size</name>
+        <value>2</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.allocation.batch.delay</name>
+        <value>10s</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.driver.label.seatOf</name>
+        <value>pants</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.executor.label.seatOf</name>
+        <value>pants</value>
+      </property>
+      <property>
+        <name>spark.app.name</name>
+        <value>de-doop</value>
+      </property>
+      <property>
+        <name>spark.submit.deployMode</name>
+        <value>cluster</value>
       </property>
     </configuration>

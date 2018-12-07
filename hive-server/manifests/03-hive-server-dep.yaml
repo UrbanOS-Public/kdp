@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: hive-server
-        image: jeffgrunewald/hive-server:1.0
+        image: jeffgrunewald/hive-server:1.2
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9999
