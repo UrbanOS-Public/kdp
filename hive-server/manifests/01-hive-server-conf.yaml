@@ -72,7 +72,7 @@ data:
       </property>
       <property>
         <name>spark.kubernetes.container.image</name>
-        <value>gcr.io/cloud-solutions-images/spark:v2.3.0-gcs</value>
+        <value>jeffgrunewald/hive-server:1.5</value>
       </property>
       <property>
         <name>spark.kubernetes.container.image.pullPolicy</name>
@@ -89,6 +89,14 @@ data:
       <property>
         <name>spark.kubernetes.allocation.batch.delay</name>
         <value>10s</value>
+      </property>
+      <property>
+        <name>hive.spark.client.rpc.server.address</name>
+        <value>hive-server.default.svc.cluster.local</value>
+      </property>
+      <property>
+        <name>hive.spark.client.rpc.server.port</name>
+        <value>50000</value>
       </property>
       <property>
         <name>spark.kubernetes.driver.label.seatOf</name>

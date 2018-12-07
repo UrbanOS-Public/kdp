@@ -22,15 +22,19 @@ spec:
     spec:
       containers:
       - name: hive-server
-        image: jeffgrunewald/hive-server:1.2
+        image: jeffgrunewald/hive-server:1.5
         imagePullPolicy: IfNotPresent
+        command:
+        - /opt/hive/bin/hiveserver2
         ports:
         - containerPort: 9999
           name: hive-ui
         - containerPort: 10000
           name: hive-server
+        - containerPort: 38151
+          name: spark-rpc
         volumeMounts:
-        - mountPath: /usr/local/hive/conf/hive-site.xml
+        - mountPath: /opt/hive/conf/hive-site.xml
           name: hive-site
           subPath: hive-site.xml
       volumes:

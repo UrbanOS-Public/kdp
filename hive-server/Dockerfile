@@ -1,29 +1,30 @@
-FROM java:8u111-jre
+FROM jeffgrunewald/spark-2.4-base:1.0
 
 ARG hadoop_version=3.1.1
 ARG hive_version=3.1.1
 ARG spark_version=2.4.0
 
-ENV HADOOP_HOME=/usr/local/hadoop \
-    HIVE_HOME=/usr/local/hive
+ENV HADOOP_HOME=/opt/hadoop \
+    HIVE_HOME=/opt/hive
 
 RUN wget http://www.us.apache.org/dist/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz && \
     tar zxf hadoop-${hadoop_version}.tar.gz && \
-    mv hadoop-${hadoop_version} /usr/local/hadoop && \
+    mv hadoop-${hadoop_version} ${HADOOP_HOME} && \
     wget http://www.us.apache.org/dist/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz && \
     tar zxf apache-hive-${hive_version}-bin.tar.gz && \
-    mv apache-hive-${hive_version}-bin $HIVE_HOME && \
+    mv apache-hive-${hive_version}-bin ${HIVE_HOME} && \
     rm *.tar.gz
 
-RUN wget http://www.us.apache.org/dist/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz && \
-    tar zxf spark-${spark_version}-bin-hadoop2.7.tgz && \
-    mv spark-${spark_version}-bin-hadoop2.7 /usr/local/spark && \
-    rm *.tgz
-
-RUN mv /usr/local/spark/jars/spark-network-common*.jar /usr/local/hive/lib/ && \
-    mv /usr/local/spark/jars/spark-core*.jar /usr/local/hive/lib/ && \
-    mv /usr/local/spark/jars/scala-library*.jar /usr/local/hive/lib/ && \
-    mv /usr/local/spark/jars/spark-launcher*.jar /usr/local/hive/lib/
-
-WORKDIR $HIVE_HOME
-CMD [ "./bin/hiveserver2" ]
+RUN ln -s $SPARK_HOME/jars/spark-network-common_2.11-${spark_version}.jar $HIVE_HOME/lib/spark-network-common_2.11-${spark_version}.jar && \
+    ln -s $SPARK_HOME/jars/scala-library-2.11.12.jar $HIVE_HOME/lib/scala-library-2.11.12.jar && \
+    ln -s $SPARK_HOME/jars/spark-core_2.11-${spark_version}.jar $HIVE_HOME/lib/spark-core_2.11-${spark_version}.jar && \
+    ln -s $SPARK_HOME/jars/spark-launcher_2.11-${spark_version}.jar $HIVE_HOME/lib/spark-launcher_2.11-${spark_version}.jar && \
+    ln -s $HIVE_HOME/lib/hive-exec-${hive_version}.jar $SPARK_HOME/jars/hive-exec-${hive_version}.jar && \
+    ln -s $HIVE_HOME/lib/hive-cli-${hive_version}.jar $SPARK_HOME/jars/hive-cli-${hive_version}.jar && \
+    ln -s $HIVE_HOME/lib/hive-common-${hive_version}.jar $SPARK_HOME/jars/hive-common-${hive_version}.jar && \
+    ln -s $HIVE_HOME/lib/hive-beeline-${hive_version}.jar $SPARK_HOME/jars/hive-beeline-${hive_version}.jar && \
+    ln -s $HIVE_HOME/lib/hive-metastore-${hive_version}.jar $SPARK_HOME/jars/hive-metastore-${hive_version}.jar && \
+    ln -s $HIVE_HOME/lib/hive-standalone-metastore-${hive_version}.jar $SPARK_HOME/jars/hive-standalone-metastore-${hive_version}.jar && \
+    ln -s $HIVE_HOME/lib/hive-jdbc-${hive_version}.jar $SPARK_HOME/jars/hive-jdbc-${hive_version}.jar && \
+    ln -s $HIVE_HOME/lib/hive-jdbc-handler-${hive_version}.jar $SPARK_HOME/jars/hive-jdbc-handler-${hive_version}.jar && \
+    rm $SPARK_HOME/jars/hive-*.spark2.jar
