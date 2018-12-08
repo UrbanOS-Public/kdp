@@ -24,8 +24,12 @@ spec:
       - name: hive-server
         image: jeffgrunewald/hive-server:1.5
         imagePullPolicy: IfNotPresent
+        workingDir: /opt/hive
         command:
-        - /opt/hive/bin/hiveserver2
+        - /bin/sh
+        - -c
+        args:
+        - 'cp /tmp/hive-site.xml /opt/hive/conf/ && sed -i "s/POD_IP/${POD_IP//./-}/" /opt/hive/conf/hive-site.xml && ./bin/hiveserver2'
         ports:
         - containerPort: 9999
           name: hive-ui
@@ -33,8 +37,13 @@ spec:
           name: hive-server
         - containerPort: 38151
           name: spark-rpc
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         volumeMounts:
-        - mountPath: /opt/hive/conf/hive-site.xml
+        - mountPath: /tmp/hive-site.xml
           name: hive-site
           subPath: hive-site.xml
       volumes:

@@ -56,7 +56,7 @@ data:
       </property>
       <property>
         <name>spark.eventLog.dir</name>
-        <value>/dev/stdout</value>
+        <value>/tmp</value>
       </property>
       <property>
         <name>spark.executor.memory</name>
@@ -92,11 +92,7 @@ data:
       </property>
       <property>
         <name>hive.spark.client.rpc.server.address</name>
-        <value>hive-server.default.svc.cluster.local</value>
-      </property>
-      <property>
-        <name>hive.spark.client.rpc.server.port</name>
-        <value>50000</value>
+        <value>POD_IP.default.pod.cluster.local</value>
       </property>
       <property>
         <name>spark.kubernetes.driver.label.seatOf</name>
