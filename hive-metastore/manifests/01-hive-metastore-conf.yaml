@@ -37,4 +37,28 @@ data:
         <name>javax.jdo.option.ConnectionPassword</name>
         <value>password123</value>
       </property>
+      <property>
+        <name>fs.s3a.connection.ssl.enabled</name>
+        <value>false</value>
+      </property>
+      <property>
+        <name>fs.s3a.endpoint</name>
+        <value>s3a://jeff-jarred-751/default</value>
+      </property>
+      <property>
+        <name>fs.s3a.awsAccessKeyId</name>
+        <value>AKIAI3LUT54EB2UZDBVA</value>
+      </property>
+      <property>
+        <name>fs.s3a.awsSecretAccessKey</name>
+        <value>Cb02J8XVR0ArFN+H+kIRb2ZnEfSLQASjPNNBDQnz</value>
+      </property>
+      <property>
+        <name>fs.s3a.path.style.access</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>fs.s3a.impl</name>
+        <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
+      </property>
     </configuration>
