@@ -31,12 +31,8 @@ spec:
         args:
         - 'cp /tmp/hive-site.xml /opt/hive/conf/ && sed -i "s/POD_IP/${POD_IP//./-}/" /opt/hive/conf/hive-site.xml && ./bin/hiveserver2'
         ports:
-        - containerPort: 9999
-          name: hive-ui
         - containerPort: 10000
           name: hive-server
-        - containerPort: 38151
-          name: spark-rpc
         env:
         - name: POD_IP
           valueFrom:

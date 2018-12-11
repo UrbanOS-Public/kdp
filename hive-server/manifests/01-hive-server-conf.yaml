@@ -110,4 +110,12 @@ data:
         <name>spark.submit.deployMode</name>
         <value>cluster</value>
       </property>
+      <property>
+        <name>spark.driver.extraLibraryPath</name>
+        <value>/opt/hadoop/lib/native</value>
+      </property>
+      <property>
+        <name>spark.executor.extraJavaOptions</name>
+        <value>-Dlog4j.configuration=file:///opt/spark/conf/log4j.properties</value>
+      </property>
     </configuration>
