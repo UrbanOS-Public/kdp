@@ -60,7 +60,7 @@ data:
       </property>
       <property>
         <name>spark.executor.memory</name>
-        <value>1g</value>
+        <value>512m</value>
       </property>
       <property>
         <name>spark.serializer</name>
@@ -72,7 +72,7 @@ data:
       </property>
       <property>
         <name>spark.kubernetes.container.image</name>
-        <value>jeffgrunewald/hive-server:1.5</value>
+        <value>jeffgrunewald/hive-server:1.6</value>
       </property>
       <property>
         <name>spark.kubernetes.container.image.pullPolicy</name>
@@ -80,7 +80,7 @@ data:
       </property>
       <property>
         <name>spark.executor.instances</name>
-        <value>2</value>
+        <value>1</value>
       </property>
       <property>
         <name>spark.kubernetes.allocation.batch.size</name>
