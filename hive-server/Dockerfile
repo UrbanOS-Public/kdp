@@ -15,6 +15,9 @@ RUN wget http://www.us.apache.org/dist/hadoop/common/hadoop-${hadoop_version}/ha
     mv apache-hive-${hive_version}-bin ${HIVE_HOME} && \
     rm *.tar.gz
 
+RUN cd /opt/spark/jars && \
+    wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop3.jar
+
 RUN ln -s $SPARK_HOME/jars/spark-network-common_2.11-${spark_version}.jar $HIVE_HOME/lib/spark-network-common_2.11-${spark_version}.jar && \
     ln -s $SPARK_HOME/jars/scala-library-2.11.12.jar $HIVE_HOME/lib/scala-library-2.11.12.jar && \
     ln -s $SPARK_HOME/jars/spark-core_2.11-${spark_version}.jar $HIVE_HOME/lib/spark-core_2.11-${spark_version}.jar && \
@@ -28,3 +31,6 @@ RUN ln -s $SPARK_HOME/jars/spark-network-common_2.11-${spark_version}.jar $HIVE_
     ln -s $HIVE_HOME/lib/hive-jdbc-${hive_version}.jar $SPARK_HOME/jars/hive-jdbc-${hive_version}.jar && \
     ln -s $HIVE_HOME/lib/hive-jdbc-handler-${hive_version}.jar $SPARK_HOME/jars/hive-jdbc-handler-${hive_version}.jar && \
     rm $SPARK_HOME/jars/hive-*.spark2.jar
+
+COPY log4j.properties /opt/spark/conf/log4j.properties
+COPY spark-defaults.conf /opt/spark/conf/spark-defaults.conf
