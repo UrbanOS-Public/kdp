@@ -15,6 +15,10 @@ data:
         <value>thrift://hive-metastore:9083</value>
       </property>
       <property>
+        <name>hive.metastore.warehouse.dir</name>
+        <value>s3a://jeff-jarred-751/apps/hive/warehouse</value>
+      </property>
+      <property>
         <name>javax.jdo.option.ConnectionURL</name>
         <value>jdbc:postgresql://postgres/metastore</value>
       </property>
@@ -72,7 +76,7 @@ data:
       </property>
       <property>
         <name>spark.kubernetes.container.image</name>
-        <value>jeffgrunewald/hive-server:1.6</value>
+        <value>jeffgrunewald/de-doop:1.1</value>
       </property>
       <property>
         <name>spark.kubernetes.container.image.pullPolicy</name>
@@ -80,7 +84,7 @@ data:
       </property>
       <property>
         <name>spark.executor.instances</name>
-        <value>1</value>
+        <value>2</value>
       </property>
       <property>
         <name>spark.kubernetes.allocation.batch.size</name>
@@ -117,5 +121,29 @@ data:
       <property>
         <name>spark.executor.extraJavaOptions</name>
         <value>-Dlog4j.configuration=file:///opt/spark/conf/log4j.properties</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-pvc.mount.path</name>
+        <value>/tmp/hive/root/</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-pvc.options.claimName</name>
+        <value>spark-pvc</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-pvc.mount.readOnly</name>
+        <value>false</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-pvc.mount.path</name>
+        <value>/tmp/hive/root/</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-pvc.mount.readOnly</name>
+        <value>false</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-pvc.options.claimName</name>
+        <value>spark-pvc</value>
       </property>
     </configuration>
