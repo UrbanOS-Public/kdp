@@ -10,34 +10,58 @@ data:
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
     <configuration>
+
       <property>
         <name>fs.defaultFS</name>
         <value>s3a://jeff-jarred-751</value>
+        <final>true</final>
       </property>
-      <property>
-        <name>fs.s3a.connection.ssl.enabled</name>
-        <value>false</value>
-      </property>
-      <property>
-        <name>fs.s3a.endpoint</name>
-        <value>s3a://jeff-jarred-751/hive-s3</value>
-      </property>
+    
       <property>
         <name>fs.s3a.access.key</name>
         <value>AKIAI3LUT54EB2UZDBVA</value>
       </property>
+    
       <property>
         <name>fs.s3a.secret.key</name>
         <value>Cb02J8XVR0ArFN+H+kIRb2ZnEfSLQASjPNNBDQnz</value>
       </property>
-      <property>
-        <name>fs.s3a.path.style.access</name>
-        <value>true</value>
-      </property>
+    
       <property>
         <name>fs.s3a.impl</name>
         <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
       </property>
+
+      <property>
+        <name>fs.AbstractFileSystem.s3a.imp</name>
+        <value>org.apache.hadoop.fs.s3a.S3A</value>
+      </property>
+
+      <property>
+        <name>fs.trash.interval</name>
+        <value>4320</value>
+      </property>
+
+      <property>
+        <name>fs.s3a.fast.upload</name>
+        <value>true</value>
+      </property>
+    
+      <property>
+        <name>fs.s3a.fast.upload.buffer</name>
+        <value>disk</value>
+      </property>
+
+      <property>
+        <name>fs.s3a.multipart.size</name>
+        <value>67108864</value>
+      </property>
+
+      <property>
+        <name>fs.s3a.path.style.access</name>
+        <value>true</value>
+      </property>
+
     </configuration>
   hdfs-site.xml: |-
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>

@@ -18,8 +18,8 @@ opt/spark-2.4.0-bin-hadoop2.7/bin/spark-submit \
 
 
 
-CREATE TABLE peeps (COL1 String, COL2 String) ROW FORMAT DELIMITED STORED AS TEXTFILE LOCATION 's3a://jeff-jarred-751/hive-s3/peeps';
-
+CREATE TABLE nifi (stream String) LOCATION 's3a://jeff-jarred-751/hive-s3/peeps';
+CREATE TABLE nifi (flow String)
 
 
 curl http://www.us.apache.org/dist/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz | tar -zx

@@ -17,7 +17,7 @@ data:
       </property>
       <property>
         <name>metastore.warehouse.dir</name>
-        <value>s3a://jeff-jarred-751/apps/hive/warehouse</value>
+        <value>s3a://jeff-jarred-751/hive-s3</value>
       </property>
       <property>
         <name>metastore.task.threads.always</name>

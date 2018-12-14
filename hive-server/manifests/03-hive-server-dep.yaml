@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: hive-server
-        image: jeffgrunewald/de-doop:1.1
+        image: jeffgrunewald/de-doop:1.4
         imagePullPolicy: IfNotPresent
         workingDir: /opt/hive
         command:
@@ -45,9 +45,6 @@ spec:
         - mountPath: /opt/hadoop/etc/hadoop/core-site.xml
           name: hadoop-configs
           subPath: core-site.xml
-        - mountPath: /opt/hadoop/etc/hadoop/hdfs-site.xml
-          name: hadoop-configs
-          subPath: hdfs-site.xml
       volumes:
       - name: hive-site
         configMap:

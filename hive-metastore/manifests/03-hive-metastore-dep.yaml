@@ -22,7 +22,7 @@ spec:
     spec:
       initContainers:
       - name: init-schema
-        image: jeffgrunewald/hive-metastore:1.2
+        image: jeffgrunewald/hive-metastore:1.4
         imagePullPolicy: IfNotPresent
         command:
         - /bin/bash
@@ -35,7 +35,7 @@ spec:
           subPath: metastore-site.xml
       containers:
       - name: hive-metastore
-        image: jeffgrunewald/hive-metastore:1.1
+        image: jeffgrunewald/hive-metastore:1.4
         imagePullPolicy: IfNotPresent
         command:
         - /usr/local/hive-metastore/bin/start-metastore
@@ -49,9 +49,6 @@ spec:
         - mountPath: /usr/local/hadoop/etc/hadoop/core-site.xml
           name: hadoop-configs
           subPath: core-site.xml
-        - mountPath: /usr/local/hadoop/etc/hadoop/hdfs-site.xml
-          name: hadoop-configs
-          subPath: hdfs-site.xml
       volumes:
       - name: metastore-site
         configMap:
