@@ -22,7 +22,7 @@ spec:
     spec:
       initContainers:
       - name: init-schema
-        image: jeffgrunewald/hive-metastore:1.4
+        image: jeffgrunewald/hive-metastore:1.6
         imagePullPolicy: IfNotPresent
         command:
         - /bin/bash
@@ -35,7 +35,7 @@ spec:
           subPath: metastore-site.xml
       containers:
       - name: hive-metastore
-        image: jeffgrunewald/hive-metastore:1.4
+        image: jeffgrunewald/hive-metastore:1.6
         imagePullPolicy: IfNotPresent
         command:
         - /usr/local/hive-metastore/bin/start-metastore

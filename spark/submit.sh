@@ -16,10 +16,12 @@ opt/spark-2.4.0-bin-hadoop2.7/bin/spark-submit \
  --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark-jalson \
  local:///opt/spark/examples/jars/spark-examples_2.11-2.4.0.jar
 
-
-
 CREATE TABLE nifi (stream String) LOCATION 's3a://jeff-jarred-751/hive-s3/peeps';
-CREATE TABLE nifi (flow String)
+
+
+bin/hive --hiveconf hive.root.logger=DEBUG,console
+CREATE TABLE nifi (flow String);
+insert into table nifi values ('bbrewer');
 
 
 curl http://www.us.apache.org/dist/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz | tar -zx

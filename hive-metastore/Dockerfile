@@ -22,5 +22,17 @@ RUN wget https://s3.us-east-2.amazonaws.com/scos-third-party-repository/aws-java
     wget http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/${hadoop_version}/hadoop-aws-${hadoop_version}.jar -P ${METASTORE_HOME}/lib/ && \
     wget https://s3.us-east-2.amazonaws.com/scos-third-party-repository/joda-time/joda-time-2.9.9.jar -P ${METASTORE_HOME}/lib/
 
+RUN ln -s ${HADOOP_HOME}/share/hadoop/common/lib/hadoop-annotations-${hadoop_version}.jar ${METASTORE_HOME}/lib/hadoop-annotations-${hadoop_version}.jar && \
+    ln -s ${HADOOP_HOME}/share/hadoop/common/lib/hadoop-auth-${hadoop_version}.jar ${METASTORE_HOME}/lib/hadoop-auth-${hadoop_version}.jar && \
+    ln -s ${HADOOP_HOME}/share/hadoop/client/hadoop-client-api-${hadoop_version}.jar ${METASTORE_HOME}/lib/hadoop-client-api-${hadoop_version}.jar && \
+    ln -s ${HADOOP_HOME}/share/hadoop/client/hadoop-client-minicluster-${hadoop_version}.jar ${METASTORE_HOME}/lib/hadoop-client-minicluster-${hadoop_version}.jar && \
+    ln -s ${HADOOP_HOME}/share/hadoop/client/hadoop-client-runtime-${hadoop_version}.jar ${METASTORE_HOME}/lib/hadoop-client-runtime-${hadoop_version}.jar && \
+    ln -s ${HADOOP_HOME}/share/hadoop/common/hadoop-common-${hadoop_version}.jar ${METASTORE_HOME}/lib/hadoop-common-${hadoop_version}.jar && \
+    ln -s ${HADOOP_HOME}/share/hadoop/common/hadoop-common-${hadoop_version}-sources.jar ${METASTORE_HOME}/lib/hadoop-common-${hadoop_version}-sources.jar && \
+    ln -s ${HADOOP_HOME}/share/hadoop/hdfs/hadoop-hdfs-${hadoop_version}.jar ${METASTORE_HOME}/lib/hadoop-hdfs-${hadoop_version}.jar && \
+    rm /usr/local/hadoop/share/hadoop/common/lib/guava-*.jar /usr/local/hadoop/share/hadoop/hdfs/lib/guava-*.jar && \
+    ln -s ${METASTORE_HOME}/lib/guava-19.0.jar ${HADOOP_HOME}/share/hadoop/common/lib/guava-19.0.jar && \
+    ln -s ${METASTORE_HOME}/lib/guava-19.0.jar ${HADOOP_HOME}/share/hadoop/hdfs/lib/guava-19.0.jar
+
 WORKDIR $METASTORE_HOME
 CMD [ "./bin/start-metastore" ]
