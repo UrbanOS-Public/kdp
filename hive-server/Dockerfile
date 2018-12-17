@@ -39,10 +39,6 @@ RUN ln -s ${SPARK_HOME}/jars/spark-network-common_2.11-${spark_version}.jar ${HI
 
 
 RUN rm -rf ${SPARK_HOME}/jars/{hadoop-annotations-*,hadoop-auth-*,hadoop-client-*,hadoop-common-*,hadoop-hdfs-*}.jar && \
-    # rm ${SPARK_HOME}/jars/guava-*.jar ${HADOOP_HOME}/share/hadoop/common/lib/guava-*.jar ${HADOOP_HOME}/share/hadoop/hdfs/lib/guava-*.jar && \
-    # ln -s ${HIVE_HOME}/lib/guava-19.0.jar ${SPARK_HOME}/jars/guava-19.0.jar && \
-    # ln -s ${HIVE_HOME}/lib/guava-19.0.jar ${HADOOP_HOME}/share/hadoop/common/lib/guava-19.0.jar && \
-    # ln -s ${HIVE_HOME}/lib/guava-19.0.jar ${HADOOP_HOME}/share/hadoop/hdfs/lib/guava-19.0.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/common/lib/hadoop-annotations-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-annotations-${hadoop_version}.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/common/lib/hadoop-auth-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-auth-${hadoop_version}.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/client/hadoop-client-api-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-client-api-${hadoop_version}.jar && \
