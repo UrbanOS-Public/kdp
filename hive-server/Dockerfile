@@ -17,9 +17,6 @@ RUN wget http://www.us.apache.org/dist/hadoop/common/hadoop-${hadoop_version}/ha
     mv apache-hive-${hive_version}-bin ${HIVE_HOME} && \
     rm *.tar.gz
 
-RUN cd ${SPARK_HOME}/jars && \
-    wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop3.jar
-
 RUN wget https://s3.us-east-2.amazonaws.com/scos-third-party-repository/aws-java-sdk/aws-java-sdk-${aws_sdk_version}.jar -P ${SPARK_HOME}/jars/ && \
     ln -s ${SPARK_HOME}/jars/aws-java-sdk-${aws_sdk_version}.jar ${HIVE_HOME}/lib/aws-java-sdk-${aws_sdk_version}.jar && \
     wget http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/${hadoop_version}/hadoop-aws-${hadoop_version}.jar -P ${SPARK_HOME}/jars/ && \
@@ -42,10 +39,10 @@ RUN ln -s ${SPARK_HOME}/jars/spark-network-common_2.11-${spark_version}.jar ${HI
 
 
 RUN rm -rf ${SPARK_HOME}/jars/{hadoop-annotations-*,hadoop-auth-*,hadoop-client-*,hadoop-common-*,hadoop-hdfs-*}.jar && \
-    rm ${SPARK_HOME}/jars/guava-*.jar ${HADOOP_HOME}/share/hadoop/common/lib/guava-*.jar ${HADOOP_HOME}/share/hadoop/hdfs/lib/guava-*.jar && \
-    ln -s ${HIVE_HOME}/lib/guava-19.0.jar ${SPARK_HOME}/jars/guava-19.0.jar && \
-    ln -s ${HIVE_HOME}/lib/guava-19.0.jar ${HADOOP_HOME}/share/hadoop/common/lib/guava-19.0.jar && \
-    ln -s ${HIVE_HOME}/lib/guava-19.0.jar ${HADOOP_HOME}/share/hadoop/hdfs/lib/guava-19.0.jar && \
+    # rm ${SPARK_HOME}/jars/guava-*.jar ${HADOOP_HOME}/share/hadoop/common/lib/guava-*.jar ${HADOOP_HOME}/share/hadoop/hdfs/lib/guava-*.jar && \
+    # ln -s ${HIVE_HOME}/lib/guava-19.0.jar ${SPARK_HOME}/jars/guava-19.0.jar && \
+    # ln -s ${HIVE_HOME}/lib/guava-19.0.jar ${HADOOP_HOME}/share/hadoop/common/lib/guava-19.0.jar && \
+    # ln -s ${HIVE_HOME}/lib/guava-19.0.jar ${HADOOP_HOME}/share/hadoop/hdfs/lib/guava-19.0.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/common/lib/hadoop-annotations-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-annotations-${hadoop_version}.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/common/lib/hadoop-auth-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-auth-${hadoop_version}.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/client/hadoop-client-api-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-client-api-${hadoop_version}.jar && \
@@ -53,7 +50,6 @@ RUN rm -rf ${SPARK_HOME}/jars/{hadoop-annotations-*,hadoop-auth-*,hadoop-client-
     ln -s ${HADOOP_HOME}/share/hadoop/client/hadoop-client-runtime-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-client-runtime-${hadoop_version}.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/common/hadoop-common-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-common-${hadoop_version}.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/hdfs/hadoop-hdfs-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-hdfs-${hadoop_version}.jar && \
-#    ln -s ${HADOOP_HOME}/share/hadoop/hdfs/lib/htrace-core4-4.1.0-incubating.jar ${SPARK_HOME}/jars/htrace-core4-4.1.0-incubating.jar
     ln -s ${HADOOP_HOME}/share/hadoop/hdfs/lib/htrace-core4-4.0.1-incubating.jar ${SPARK_HOME}/jars/htrace-core4-4.0.1-incubating.jar
 
 COPY log4j.properties ${SPARK_HOME}/conf/log4j.properties
