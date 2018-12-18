@@ -1,7 +1,7 @@
 FROM jeffgrunewald/spark-2.4-base:1.0
 
 ARG hadoop_version=2.8.5
-ARG hive_version=3.0.0
+ARG hive_version=3.1.1
 ARG spark_version=2.4.0
 ARG aws_sdk_version=1.11.467
 
