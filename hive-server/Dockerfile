@@ -21,7 +21,7 @@ RUN wget https://s3.us-east-2.amazonaws.com/scos-third-party-repository/aws-java
     ln -s ${SPARK_HOME}/jars/aws-java-sdk-${aws_sdk_version}.jar ${HIVE_HOME}/lib/aws-java-sdk-${aws_sdk_version}.jar && \
     wget http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/${hadoop_version}/hadoop-aws-${hadoop_version}.jar -P ${SPARK_HOME}/jars/ && \
     ln -s ${SPARK_HOME}/jars/hadoop-aws-${hadoop_version}.jar ${HIVE_HOME}/lib/hadoop-aws-${hadoop_version}.jar && \
-    rm ${SPARK_HOME}/jars/htrace-core-*.jar
+    rm ${SPARK_HOME}/jars/{htrace-core-*,hadoop-annotations-*,hadoop-auth-*,hadoop-common-*,hadoop-hdfs-*,hive-*.spark2}.jar
 
 RUN ln -s ${SPARK_HOME}/jars/spark-network-common_2.11-${spark_version}.jar ${HIVE_HOME}/lib/spark-network-common_2.11-${spark_version}.jar && \
     ln -s ${SPARK_HOME}/jars/scala-library-2.11.12.jar ${HIVE_HOME}/lib/scala-library-2.11.12.jar && \
@@ -35,17 +35,8 @@ RUN ln -s ${SPARK_HOME}/jars/spark-network-common_2.11-${spark_version}.jar ${HI
     ln -s ${HIVE_HOME}/lib/hive-standalone-metastore-${hive_version}.jar ${SPARK_HOME}/jars/hive-standalone-metastore-${hive_version}.jar && \
     ln -s ${HIVE_HOME}/lib/hive-jdbc-${hive_version}.jar ${SPARK_HOME}/jars/hive-jdbc-${hive_version}.jar && \
     ln -s ${HIVE_HOME}/lib/hive-jdbc-handler-${hive_version}.jar ${SPARK_HOME}/jars/hive-jdbc-handler-${hive_version}.jar && \
-    rm ${SPARK_HOME}/jars/hive-*.spark2.jar
-
-
-RUN rm -rf ${SPARK_HOME}/jars/{hadoop-annotations-*,hadoop-auth-*,hadoop-client-*,hadoop-common-*,hadoop-hdfs-*}.jar && \
-    ln -s ${HADOOP_HOME}/share/hadoop/common/lib/hadoop-annotations-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-annotations-${hadoop_version}.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/common/lib/hadoop-auth-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-auth-${hadoop_version}.jar && \
-    ln -s ${HADOOP_HOME}/share/hadoop/client/hadoop-client-api-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-client-api-${hadoop_version}.jar && \
-    ln -s ${HADOOP_HOME}/share/hadoop/client/hadoop-client-minicluster-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-client-minicluster-${hadoop_version}.jar && \
-    ln -s ${HADOOP_HOME}/share/hadoop/client/hadoop-client-runtime-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-client-runtime-${hadoop_version}.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/common/hadoop-common-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-common-${hadoop_version}.jar && \
-    ln -s ${HADOOP_HOME}/share/hadoop/hdfs/hadoop-hdfs-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-hdfs-${hadoop_version}.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/hdfs/lib/htrace-core4-4.0.1-incubating.jar ${SPARK_HOME}/jars/htrace-core4-4.0.1-incubating.jar
 
 COPY log4j.properties ${SPARK_HOME}/conf/log4j.properties
