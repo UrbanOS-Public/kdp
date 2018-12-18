@@ -122,28 +122,4 @@ data:
         <name>spark.executor.extraJavaOptions</name>
         <value>-Dlog4j.configuration=file:///opt/spark/conf/log4j.properties</value>
       </property>
-      <property>
-        <name>spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-pvc.mount.path</name>
-        <value>/tmp/hive/root/</value>
-      </property>
-      <property>
-        <name>spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-pvc.options.claimName</name>
-        <value>spark-pvc</value>
-      </property>
-      <property>
-        <name>spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-pvc.mount.readOnly</name>
-        <value>false</value>
-      </property>
-      <property>
-        <name>spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-pvc.mount.path</name>
-        <value>/tmp/hive/root/</value>
-      </property>
-      <property>
-        <name>spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-pvc.mount.readOnly</name>
-        <value>false</value>
-      </property>
-      <property>
-        <name>spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-pvc.options.claimName</name>
-        <value>spark-pvc</value>
-      </property>
     </configuration>
