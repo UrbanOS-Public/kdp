@@ -43,4 +43,8 @@ data:
         <name>javax.jdo.option.ConnectionPassword</name>
         <value>password123</value>
       </property>
+      <property>
+        <name>metastore.metastore.event.db.notification.api.auth</name>
+        <value>false</value>
+      </property>
     </configuration>

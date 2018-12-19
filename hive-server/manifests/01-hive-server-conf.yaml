@@ -63,8 +63,8 @@ data:
         <value>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager</value>
       </property>
       <property>
-        <name>hive.txn.timeout</name>
-        <value>30000</value>
+        <name>hive.metastore.event.db.notification.api.auth</name>
+        <value>false</value>
       </property>
       <property>
         <name>spark.master</name>
@@ -92,7 +92,7 @@ data:
       </property>
       <property>
         <name>spark.kubernetes.container.image</name>
-        <value>jeffgrunewald/de-doop:1.41</value>
+        <value>jeffgrunewald/de-doop:1.42</value>
       </property>
       <property>
         <name>spark.kubernetes.container.image.pullPolicy</name>
