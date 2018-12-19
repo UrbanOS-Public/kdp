@@ -51,6 +51,22 @@ data:
         <value>spark</value>
       </property>
       <property>
+        <name>hive.support.concurrency</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>hive.exec.dynamic.partition.mode</name>
+        <value>nonstrict</value>
+      </property>
+      <property>
+        <name>hive.txn.manager</name>
+        <value>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager</value>
+      </property>
+      <property>
+        <name>hive.txn.timeout</name>
+        <value>30000</value>
+      </property>
+      <property>
         <name>spark.master</name>
         <value>k8s://https://kubernetes.default.svc.cluster.local:443</value>
       </property>
@@ -76,7 +92,7 @@ data:
       </property>
       <property>
         <name>spark.kubernetes.container.image</name>
-        <value>jeffgrunewald/de-doop:1.34</value>
+        <value>jeffgrunewald/de-doop:1.41</value>
       </property>
       <property>
         <name>spark.kubernetes.container.image.pullPolicy</name>

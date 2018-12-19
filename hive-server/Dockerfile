@@ -31,6 +31,7 @@ RUN ln -s ${SPARK_HOME}/jars/spark-network-common_2.11-${spark_version}.jar ${HI
     # ln -s ${HIVE_HOME}/lib/hive-cli-${hive_version}.jar ${SPARK_HOME}/jars/hive-cli-${hive_version}.jar && \
     # ln -s ${HIVE_HOME}/lib/hive-common-${hive_version}.jar ${SPARK_HOME}/jars/hive-common-${hive_version}.jar && \
     ln -s ${HIVE_HOME}/lib/hive-beeline-${hive_version}.jar ${SPARK_HOME}/jars/hive-beeline-${hive_version}.jar && \
+    ln -s ${HIVE_HOME}/lib/hive-storage-api-2.7.0.jar ${SPARK_HOME}/jars/hive-storage-api-2.7.0.jar && \
     # ln -s ${HIVE_HOME}/lib/hive-metastore-${hive_version}.jar ${SPARK_HOME}/jars/hive-metastore-${hive_version}.jar && \
     # ln -s ${HIVE_HOME}/lib/hive-standalone-metastore-${hive_version}.jar ${SPARK_HOME}/jars/hive-standalone-metastore-${hive_version}.jar && \
     # ln -s ${HIVE_HOME}/lib/hive-jdbc-${hive_version}.jar ${SPARK_HOME}/jars/hive-jdbc-${hive_version}.jar && \
@@ -39,6 +40,6 @@ RUN ln -s ${SPARK_HOME}/jars/spark-network-common_2.11-${spark_version}.jar ${HI
     ln -s ${HADOOP_HOME}/share/hadoop/common/hadoop-common-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-common-${hadoop_version}.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/hdfs/hadoop-hdfs-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-hdfs-${hadoop_version}.jar && \
     ln -s ${HADOOP_HOME}/share/hadoop/hdfs/hadoop-hdfs-client-${hadoop_version}.jar ${SPARK_HOME}/jars/hadoop-hdfs-client-${hadoop_version}.jar && \
-    ln -s ${HADOOP_HOME}/share/hadoop/hdfs/lib/htrace-core4-4.0.1-incubating.jar ${SPARK_HOME}/jars/htrace-core4-4.0.1-incubating.jar    
+    ln -s ${HADOOP_HOME}/share/hadoop/hdfs/lib/htrace-core4-4.0.1-incubating.jar ${SPARK_HOME}/jars/htrace-core4-4.0.1-incubating.jar
 
 COPY log4j.properties ${SPARK_HOME}/conf/log4j.properties

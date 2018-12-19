@@ -24,6 +24,9 @@ CREATE TABLE nifi (flow String);
 insert into table nifi values ('bbrewer5');
 
 
+create table nifi4 (flow String) clustered by (flow) into 5 buckets stored as orc tblproperties ('transactional'='true');
+ALTER TABLE istari SET TBLPROPERTIES ('transactional' = 'true');
+
 curl http://www.us.apache.org/dist/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz | tar -zx
 cd spark-2.4.0-bin-hadoop2.7/jars
 
