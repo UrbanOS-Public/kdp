@@ -8,14 +8,8 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 9999
-    targetPort: hive-ui
-    name: hive-ui
   - port: 10000
     targetPort: hive-server
     name: hive-server
-  - port: 38151
-    targetPort: spark-rpc
-    name: spark-rpc
   selector:
     app: hive-server
