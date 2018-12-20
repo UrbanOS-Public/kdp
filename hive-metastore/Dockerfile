@@ -1,6 +1,7 @@
 FROM java:8u111-jre
 
 ARG hadoop_version=3.1.1
+ARG joda_version=2.9.9
 ARG metastore_version=3.0.0
 ARG pg_driver_version=42.2.5
 ARG s3_url=https://s3.us-east-2.amazonaws.com/scos-third-party-repository
@@ -20,6 +21,6 @@ RUN wget ${s3_url}/hadoop/hadoop-${hadoop_version}.tar.gz && \
     rm *.tar.gz
 
 RUN wget ${s3_url}/postgresql/postgresql-${pg_driver_version}.jar -P $METASTORE_HOME/lib/ && \
-    wget ${s3_url}/joda-time/joda-time-2.9.9.jar -P ${METASTORE_HOME}/lib/
+    wget ${s3_url}/joda-time/joda-time-${joda_version}.jar -P ${METASTORE_HOME}/lib/
 
 WORKDIR $METASTORE_HOME

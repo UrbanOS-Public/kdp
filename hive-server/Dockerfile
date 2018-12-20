@@ -4,23 +4,27 @@ ARG hadoop_version=2.8.5
 ARG hive_version=3.1.1
 ARG spark_version=2.4.0
 ARG aws_sdk_version=1.11.467
+ARG s3_url=https://s3.us-east-2.amazonaws.com/scos-third-party-repository
 
 ENV HADOOP_HOME=/opt/hadoop \
     HIVE_HOME=/opt/hive \
     SPARK_HOME=/opt/spark
 
-RUN wget http://www.us.apache.org/dist/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz && \
+RUN wget ${s3_url}/hadoop/hadoop-${hadoop_version}.tar.gz && \
     tar zxf hadoop-${hadoop_version}.tar.gz && \
     mv hadoop-${hadoop_version} ${HADOOP_HOME} && \
-    wget https://archive.apache.org/dist/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz && \
+    wget ${s3_url}/hive/apache-hive-${hive_version}-bin.tar.gz && \
     tar zxf apache-hive-${hive_version}-bin.tar.gz && \
     mv apache-hive-${hive_version}-bin ${HIVE_HOME} && \
-    rm *.tar.gz
+    mv ${HADOOP_HOME}/share/hadoop/tools/lib/hadoop-aws-${hadoop_version}.jar ${HIVE_HOME}/lib/ && \
+    mv ${HADOOP_HOME}/share/hadoop/tools/lib/aws-java-sdk-*.jar ${HIVE_HOME}/lib/ && \
+    rm *.tar.gz && \
+    rm -r ${HADOOP_HOME}/share/hadoop/tools/* && \
+    rm -r ${HADOOP_HOME}/share/hadoop/yarn/* && \
+    rm -r ${HADOOP_HOME}/share/doc
 
-RUN wget https://s3.us-east-2.amazonaws.com/scos-third-party-repository/aws-java-sdk/aws-java-sdk-${aws_sdk_version}.jar -P ${SPARK_HOME}/jars/ && \
+RUN wget ${s3_url}/aws-java-sdk/aws-java-sdk-${aws_sdk_version}.jar -P ${SPARK_HOME}/jars/ && \
     ln -s ${SPARK_HOME}/jars/aws-java-sdk-${aws_sdk_version}.jar ${HIVE_HOME}/lib/aws-java-sdk-${aws_sdk_version}.jar && \
-    wget http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/${hadoop_version}/hadoop-aws-${hadoop_version}.jar -P ${SPARK_HOME}/jars/ && \
-    ln -s ${SPARK_HOME}/jars/hadoop-aws-${hadoop_version}.jar ${HIVE_HOME}/lib/hadoop-aws-${hadoop_version}.jar && \
     rm ${SPARK_HOME}/jars/{htrace-core-*,hadoop-annotations-*,hadoop-auth-*,hadoop-common-*,hadoop-hdfs-*,hive-*.spark2}.jar
 
 RUN ln -s ${SPARK_HOME}/jars/spark-network-common_2.11-${spark_version}.jar ${HIVE_HOME}/lib/spark-network-common_2.11-${spark_version}.jar && \

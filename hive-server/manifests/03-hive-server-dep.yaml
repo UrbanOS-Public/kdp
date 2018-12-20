@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: hive-server
-        image: jeffgrunewald/de-doop:1.42
+        image: jeffgrunewald/de-doop:1.49
         imagePullPolicy: IfNotPresent
         workingDir: /opt/hive
         command:

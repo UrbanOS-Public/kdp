@@ -92,7 +92,7 @@ data:
       </property>
       <property>
         <name>spark.kubernetes.container.image</name>
-        <value>jeffgrunewald/de-doop:1.42</value>
+        <value>jeffgrunewald/scos-spark:1.10</value>
       </property>
       <property>
         <name>spark.kubernetes.container.image.pullPolicy</name>

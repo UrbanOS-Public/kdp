@@ -35,6 +35,8 @@ mv spark-core_2.11-2.4.0.jar $HIVE_HOME/lib/
 mv scala-library-2.11.12.jar $HIVE_HOME/lib/
 mv spark-launcher_2.11-2.4.0.jar $HIVE_HOME/lib/
 
+!connect jdbc:hive2://hive-server:10000
+
 
 
 
