@@ -22,31 +22,31 @@ spec:
     spec:
       initContainers:
       - name: init-schema
-        image: jeffgrunewald/hive-metastore:1.24
+        image: jeffgrunewald/hive-metastore:1.25
         imagePullPolicy: IfNotPresent
         command:
         - /bin/bash
         - -c
         args:
-        - /usr/local/hive-metastore/bin/schematool -dbType postgres -validate || /usr/local/hive-metastore/bin/schematool -dbType postgres -initSchema
+        - /opt/hive-metastore/bin/schematool -dbType postgres -validate || /opt/hive-metastore/bin/schematool -dbType postgres -initSchema
         volumeMounts:
-        - mountPath: /usr/local/hive-metastore/conf/metastore-site.xml
+        - mountPath: /opt/hive-metastore/conf/metastore-site.xml
           name: metastore-site
           subPath: metastore-site.xml
       containers:
       - name: hive-metastore
-        image: jeffgrunewald/hive-metastore:1.24
+        image: jeffgrunewald/hive-metastore:1.25
         imagePullPolicy: IfNotPresent
         command:
-        - /usr/local/hive-metastore/bin/start-metastore
+        - /opt/hive-metastore/bin/start-metastore
         ports:
         - containerPort: 9083
           name: hive-metastore
         volumeMounts:
-        - mountPath: /usr/local/hive-metastore/conf/metastore-site.xml
+        - mountPath: /opt/hive-metastore/conf/metastore-site.xml
           name: metastore-site
           subPath: metastore-site.xml
-        - mountPath: /usr/local/hadoop/etc/hadoop/core-site.xml
+        - mountPath: /opt/hadoop/etc/hadoop/core-site.xml
           name: hadoop-configs
           subPath: core-site.xml
       volumes:
