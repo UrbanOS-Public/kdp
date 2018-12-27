@@ -22,18 +22,33 @@ spec:
     spec:
       containers:
       - name: hive-server
-        image: jeffgrunewald/hive-server:1.0
+        image: jeffgrunewald/de-doop:1.49
         imagePullPolicy: IfNotPresent
+        workingDir: /opt/hive
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - 'cp /tmp/hive-site.xml /opt/hive/conf/ && sed -i "s/POD_IP/${POD_IP//./-}/" /opt/hive/conf/hive-site.xml && ./bin/hiveserver2'
         ports:
-        - containerPort: 9999
-          name: hive-ui
         - containerPort: 10000
           name: hive-server
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         volumeMounts:
-        - mountPath: /usr/local/hive/conf/hive-site.xml
+        - mountPath: /tmp/hive-site.xml
           name: hive-site
           subPath: hive-site.xml
+        - mountPath: /opt/hadoop/etc/hadoop/core-site.xml
+          name: hadoop-configs
+          subPath: core-site.xml
       volumes:
       - name: hive-site
         configMap:
           name: hive-site
+      - name: hadoop-configs
+        configMap:
+          name: hadoop-configs

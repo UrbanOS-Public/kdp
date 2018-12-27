@@ -7,6 +7,8 @@ metadata:
     app: hive-metastore
 data:
   metastore-site.xml: |-
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
     <configuration>
       <property>
         <name>metastore.thrift.uris</name>
@@ -14,8 +16,12 @@ data:
         <description>Thrift URI for the remote metastore. Used by metastore client to connect to remote metastore.</description>
       </property>
       <property>
+        <name>metastore.warehouse.dir</name>
+        <value>s3a://jeff-jarred-751/hive-s3</value>
+      </property>
+      <property>
         <name>metastore.task.threads.always</name>
-        <value>org.apache.hadoop.hive.metastore.events.EventCleanerTask</value>
+        <value>org.apache.hadoop.hive.metastore.events.EventCleanerTask,org.apache.hadoop.hive.metastore.MaterializationsCacheCleanerTask</value>
       </property>
       <property>
         <name>metastore.expression.proxy</name>
@@ -36,5 +42,9 @@ data:
       <property>
         <name>javax.jdo.option.ConnectionPassword</name>
         <value>password123</value>
+      </property>
+      <property>
+        <name>metastore.metastore.event.db.notification.api.auth</name>
+        <value>false</value>
       </property>
     </configuration>

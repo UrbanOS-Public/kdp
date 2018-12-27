@@ -1,37 +1,51 @@
-FROM java:openjdk-8-jdk
+FROM openjdk:8-alpine
 
-ENV hadoop_ver 3.1.1
-ENV spark_ver 2.4.0
+ARG hadoop_version=2.8.5
+ARG hive_version=3.1.1
+ARG hive_storage_version=2.7.0
+ARG htrace_version=4.0.1-incubating
+ARG spark_version=2.4.0
+ARG aws_sdk_version=1.11.467
+ARG s3_url=https://s3.us-east-2.amazonaws.com/scos-third-party-repository
+ARG tini_version=0.18.0
 
-# Get Hadoop from US Apache mirror and extract just the native
-# libs. (Until we care about running HDFS with these containers, this
-# is all we need.)
-RUN cd /opt && \
-    curl http://www.us.apache.org/dist/hadoop/common/hadoop-${hadoop_ver}/hadoop-${hadoop_ver}.tar.gz \
-       | tar -zx hadoop-${hadoop_ver}/lib/native && \
-    ln -s hadoop-${hadoop_ver} hadoop && \
-    echo Hadoop ${hadoop_ver} native libraries installed in /opt/hadoop/lib/native
+ENV SPARK_HOME=/opt/spark
 
-# Get Spark from US Apache mirror.
-RUN cd /opt && \
-    curl http://www.us.apache.org/dist/spark/spark-${spark_ver}/spark-${spark_ver}-bin-hadoop2.7.tgz | \
-        tar -zx && \
-    ln -s spark-${spark_ver}-bin-hadoop2.7 spark && \
-    echo Spark ${spark_ver} installed in /opt
+RUN set -ex && \
+    apk upgrade --no-cache && \
+    apk add --no-cache bash tini libc6-compat linux-pam && \
+    mkdir -p /opt/hive/lib && \
+    rm /bin/sh && \
+    ln -sv /bin/bash /bin/sh && \
+    echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
+    chgrp root /etc/passwd && chmod ug+rw /etc/passwd
 
-# Add the GCS connector.
-RUN cd /opt/spark/jars && \
-    curl -O https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop3.jar
+SHELL ["/bin/bash", "-c"]
+RUN wget https://archive.apache.org/dist/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz && \
+    tar zxf spark-${spark_version}-bin-hadoop2.7.tgz && \
+    mv spark-${spark_version}-bin-hadoop2.7 ${SPARK_HOME} && \
+    rm -r *.tgz && \
+    rm ${SPARK_HOME}/jars/{htrace-core*,hadoop-hdfs-*,hadoop-common-*,hadoop-auth-*,hadoop-annotations-*,hive-*.spark2}.jar
 
-# if numpy is installed on a driver it needs to be installed on all
-# workers, so install it everywhere
-RUN apt-get update && \
-    apt-get install -y python-numpy && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN wget ${s3_url}/aws-java-sdk/aws-java-sdk-${aws_sdk_version}.jar -P ${SPARK_HOME}/jars/ && \
+    mvn_jars=( \
+        "hadoop/hadoop-auth/${hadoop_version}/hadoop-auth-${hadoop_version}" \
+        "hadoop/hadoop-aws/${hadoop_version}/hadoop-aws-${hadoop_version}" \
+        "hadoop/hadoop-common/${hadoop_version}/hadoop-common-${hadoop_version}" \
+        "hadoop/hadoop-hdfs/${hadoop_version}/hadoop-hdfs-${hadoop_version}" \
+        "hadoop/hadoop-hdfs-client/${hadoop_version}/hadoop-hdfs-client-${hadoop_version}" \
+        "hive/hive-beeline/${hive_version}/hive-beeline-${hive_version}" \
+        "hive/hive-exec/${hive_version}/hive-exec-${hive_version}" \
+        "hive/hive-storage-api/${hive_storage_version}/hive-storage-api-${hive_storage_version}" \
+        "htrace/htrace-core4/${htrace_version}/htrace-core4-${htrace_version}" \
+    ) && \
+    for jar_file in ${mvn_jars[@]}; do \
+        wget http://central.maven.org/maven2/org/apache/${jar_file}.jar -P ${SPARK_HOME}/jars; \
+    done && \
+    ln -s ${SPARK_HOME}/jars/hive-exec-${hive_version}.jar /opt/hive/lib/hive-exec-${hive_version}.jar
 
-COPY log4j.properties /opt/spark/conf/log4j.properties
-COPY start-common.sh start-worker start-master /
-COPY core-site.xml /opt/spark/conf/core-site.xml
-COPY spark-defaults.conf /opt/spark/conf/spark-defaults.conf
-ENV PATH $PATH:/opt/spark/bin
+COPY log4j.properties ${SPARK_HOME}/conf/log4j.properties
+
+WORKDIR /opt/spark/work-dir
+
+ENTRYPOINT [ "/opt/spark/kubernetes/dockerfiles/spark/entrypoint.sh" ]

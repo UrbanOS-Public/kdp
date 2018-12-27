@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  labels:
+    app: minio
+spec:
+  selector:
+    matchLabels:
+      app: minio
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: minio/minio
+          imagePullPolicy: IfNotPresent
+          command:
+          - minio
+          args:
+          - server
+          - /data
+          env:
+          - name: MINIO_ACCESS_KEY
+            value: myaccesskey
+          - name: MINIO_SECRET_KEY
+            value: mysecretkey
+          ports:
+          - containerPort: 9000
+            name: minio
+          volumeMounts:
+          - mountPath: /data
+            name: cloud-storage
+      volumes:
+        - name: cloud-storage
+          persistentVolumeClaim:
+            claimName: cloud-storage
