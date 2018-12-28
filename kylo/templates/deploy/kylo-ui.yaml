@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "kylo.fullname" . }}-kylo-ui
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "kylo.fullname" . }}-kylo
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "kylo.fullname" . }}-kylo-ui
+      release: "{{ .Release.Name }}"
+      heritage: "{{ .Release.Service }}"
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "kylo.fullname" . }}-kylo-ui
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/cm/kylo-ui.yaml") . | sha256sum }}
+    spec:
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.kylo.ui.nodeSelector | indent 8 }}
+{{- end }}
+      containers:
+        - name: {{ template "kylo.name" . }}-kylo-ui
+          imagePullPolicy: {{ .Values.kylo.ui.image.pullPolicy | quote }}
+          image: "{{ .Values.kylo.ui.image.repository }}:{{ .Values.kylo.ui.image.tag }}"
+          ports:
+            - containerPort: 8400
+          livenessProbe: 
+            httpGet:
+              path: /login.html
+              port: 8400
+            initialDelaySeconds: 20
+            periodSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /login.html
+              port: 8400
+            initialDelaySeconds: 20
+            periodSeconds: 1
+          resources:
+{{ toYaml .Values.kylo.resources | indent 12 }}
+          volumeMounts:
+            - mountPath: /opt/kylo/kylo-ui/conf
+              name: kylo-ui-config
+            - mountPath: /var/log/kylo-ui
+              subPath: govcloud/kylo/kylo-ui/log
+              name: kylovol
+      restartPolicy: Always
+      volumes:
+        - name: kylovol
+          emptyDir: {}
+        - name: kylo-ui-config
+          configMap:
+            name: {{ template "kylo.fullname" . }}-kylo-ui

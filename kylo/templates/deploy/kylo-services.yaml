@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "kylo.fullname" . }}-kylo-services
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "kylo.fullname" . }}-kylo
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "kylo.fullname" . }}-kylo-services
+      release: "{{ .Release.Name }}"
+      heritage: "{{ .Release.Service }}"
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "kylo.fullname" . }}-kylo-services
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/cm/kylo-services.yaml") . | sha256sum }}
+        checksum/encryptkey: {{ include (print $.Template.BasePath "/secrets/encryptkey.yaml") . | sha256sum }}
+    spec:
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.kylo.services.nodeSelector | indent 8 }}
+{{- end }}
+      containers:
+        - name: {{ template "kylo.name" . }}-kylo-services
+          imagePullPolicy: {{ .Values.kylo.services.image.pullPolicy | quote }}
+          image: "{{ .Values.kylo.services.image.repository }}:{{ .Values.kylo.services.image.tag }}"
+          ports:
+            - containerPort: 8420
+          livenessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -xc
+              - "[ $(curl -s -o /dev/null -w %{http_code} http://localhost:8420) -ne 401 ] && exit 1 || exit 0;"
+            initialDelaySeconds: 120
+            periodSeconds: 1
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - "[ $(curl -s -o /dev/null -w %{http_code} http://localhost:8420) -ne 401 ] && exit 1 || exit 0;"
+            initialDelaySeconds: 20
+            periodSeconds: 1
+          env:
+            - name: HADOOP_USER_NAME
+              value: spark
+            - name: HADOOP_CONF_DIR
+              value: /opt/spark/conf
+          resources:
+{{ toYaml .Values.kylo.resources | indent 12 }}
+          volumeMounts:
+            - mountPath: /opt/kylo/kylo-services/conf
+              name: kylo-services-config
+            - mountPath: /var/log/kylo-services
+              subPath: govcloud/kylo/kylo-services/log
+              name: kylovol
+            - name: sparkhome
+              mountPath: /opt/cloudera/parcels/
+              readOnly: true
+            - name: sparkconf
+              mountPath: /etc/spark2/
+              readOnly: true
+            - name: "spark"
+              mountPath: /opt/spark/conf/hive-site.xml
+              subPath: "hive-site.xml"
+            - name: "spark"
+              mountPath: /opt/spark/conf/spark-env.sh
+              subPath: "spark-env.sh"
+            - name: "encryptkey"
+              mountPath: /opt/kylo/encrypt.key
+              subPath:  "encrypt.key"
+      restartPolicy: Always
+      volumes:
+        - name: kylovol
+          emptyDir: {}
+        - name: kylo-services-config
+          configMap:
+            name: {{ template "kylo.fullname" . }}-kylo-services
+        - name: encryptkey
+          secret:
+            secretName: {{ template "kylo.fullname" . }}-encryptkey
+            items:
+              - key: "encrypt.key"
+                path: "encrypt.key"
+        - name: hosts
+          hostPath:
+            path: /etc/hosts
+        - name: hadoop
+          hostPath:
+            path: /etc/hadoop
+        - name: sparkhome
+          hostPath:
+            path: /opt/cloudera/parcels/
+        - name: alternatives
+          hostPath:
+            path: /etc/alternatives/
+        - name: sparkconf
+          hostPath:
+            path: /etc/spark2/
+        - name: "spark"
+          configMap:
+            name: {{ template "kylo.fullname" . }}-kylo-services
+            items:
+              - key: "hive-site.xml"
+                path: "hive-site.xml"
+              - key: "spark-env.sh"
+                path: "spark-env.sh"
