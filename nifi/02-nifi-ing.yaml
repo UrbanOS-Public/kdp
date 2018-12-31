@@ -16,7 +16,7 @@ metadata:
 spec:
   backend:
     serviceName: nifi
-    servicePort: 80
+    servicePort: 8080
   rules:
   - host: nifi.smrt-751.sandbox.internal.smartcolumbusos.com
     http:
