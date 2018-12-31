@@ -1,0 +1,9 @@
+dependencies:
+- name: zookeeper
+  repository: https://kubernetes-charts-incubator.storage.googleapis.com
+  version: 1.2.0
+- name: elasticsearch
+  repository: https://kubernetes-charts-incubator.storage.googleapis.com
+  version: 1.10.2
+digest: sha256:ea356c80e1c919005c1ab7da5469ac61c4484c4b311122cb0664766f90620b1e
+generated: 2018-11-13T13:40:48.64289-05:00
