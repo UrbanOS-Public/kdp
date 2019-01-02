@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: presto
+  labels:
+    app: presto
+data:
+  node.properties: |
+    node.environment=production
+    node.data-dir=/presto/etc/data
+
+  jvm.config: |
+    -server
+    -Xmx8G
+    -XX:+UseG1GC
+    -XX:G1HeapRegionSize=32M
+    -XX:+UseGCOverheadLimit
+    -XX:+ExplicitGCInvokesConcurrent
+    -XX:+HeapDumpOnOutOfMemoryError
+    -XX:+ExitOnOutOfMemoryError
+
+  config.properties: |
+    coordinator=true
+    node-scheduler.include-coordinator=true
+    http-server.http.port=8080
+    query.max-memory=4GB
+    query.max-memory-per-node=1GB
+    discovery-server.enabled=true
+    discovery.uri=http://presto:8080
+
+  log.properties: |
+    com.facebook.presto=INFO
+
+  hive.properties: |
+    connector.name=hive-hadoop2
+    hive.metastore.uri=thrift://hive-metastore:9083
+    hive.metastore.username=hive
+    hive.config.resources=/etc/hadoop/conf/core-site.xml
+    hive.s3.aws-access-key=AKIAI3LUT54EB2UZDBVA
+    hive.s3.aws-secret-key=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
+    hive.s3.path-style-access=true

@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: presto
+  labels:
+    app: presto
+spec:
+  selector:
+    matchLabels:
+      app: presto
+  template:
+    metadata:
+      labels:
+        app: presto
+    spec:
+      containers:
+      - name: presto-coordinator
+        image: jeffgrunewald/presto:1.1
+        imagePullPolicy: IfNotPresent
+        command:
+        - "launcher"
+        args:
+        - "run"
+        volumeMounts:
+        - mountPath: /presto/etc/node.properties
+          name: presto-configs
+          subPath: node.properties
+        - mountPath: /presto/etc/jvm.config
+          name: presto-configs
+          subPath: jvm.config
+        - mountPath: /presto/etc/config.properties
+          name: presto-configs
+          subPath: config.properties
+        - mountPath: /presto/etc/log.properties
+          name: presto-configs
+          subPath: log.properties
+        - mountPath: /presto/etc/catalog/hive.properties
+          name: presto-configs
+          subPath: hive.properties
+        - mountPath: /etc/hadoop/conf/core-site.xml
+          name: hadoop-configs
+          subPath: core-site.xml
+        ports:
+        - name: http-coord
+          containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /v1/cluster
+            port: http-coord
+        readinessProbe:
+          httpGet:
+            path: /v1/cluster
+            port: http-coord
+      volumes:
+      - name: presto-configs
+        configMap:
+          name: presto
+      - name: hadoop-configs
+        configMap:
+          name: hadoop-configs
