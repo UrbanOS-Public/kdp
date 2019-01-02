@@ -37,7 +37,7 @@ mv spark-launcher_2.11-2.4.0.jar $HIVE_HOME/lib/
 
 !connect jdbc:hive2://hive-server:10000
 
-
+SPARK CLIENT SERVICE ACCOUNT (THE SA RUNNING HIVE_SERVER) MUST HAVE clusterrole=edit OR SIMILAR PERMISSIONS TO RUN
 
 
 Running client driver with argv: 

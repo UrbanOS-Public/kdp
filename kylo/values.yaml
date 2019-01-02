@@ -171,7 +171,7 @@ kylo:
           username: hive
           password: password123
         metastore:
-          datasources:
+          datasource:
             url: hive-metastore
             username: hive
             password: password123
@@ -344,9 +344,9 @@ nifi:
     enabled: true
 
   image:
-    repository: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/kylo
+    repository: jeffgrunewald/nifi
     pullPolicy: Always
-    tag: v0.10.0-nifi
+    tag: "1.0"
     version: "1.6.0"
 
   ## Configure Ingress resource that allow you to access the Drupal installation

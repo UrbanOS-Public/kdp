@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: nifi
-        image: apache/nifi:1.8.0
+        image: jeffgrunewald/nifi:1.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

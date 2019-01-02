@@ -3,7 +3,7 @@ dependencies:
   repository: https://kubernetes-charts-incubator.storage.googleapis.com
   version: 1.2.0
 - name: elasticsearch
-  repository: https://kubernetes-charts-incubator.storage.googleapis.com
-  version: 1.10.2
-digest: sha256:ea356c80e1c919005c1ab7da5469ac61c4484c4b311122cb0664766f90620b1e
-generated: 2018-11-13T13:40:48.64289-05:00
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 1.13.0
+digest: sha256:c3eb4ae27971a78723d27dddc3558f86f188a6276098f5be7ee9845c2eadd9b5
+generated: 2018-12-31T13:59:01.941111-05:00

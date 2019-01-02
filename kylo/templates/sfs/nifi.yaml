@@ -172,12 +172,6 @@ spec:
           items:
             - key: "core-site.xml"
               path: "core-site.xml"
-      - name: "hdfs-site"
-        configMap:
-          name: {{ template "kylo.fullname" . }}-nifi
-          items:
-            - key: "hdfs-site.xml"
-              path: "hdfs-site.xml"
       - name: "hive-site"
         configMap:
           name: {{ template "kylo.fullname" . }}-nifi
