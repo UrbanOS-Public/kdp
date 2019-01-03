@@ -1,0 +1,45 @@
+FROM openjdk:8-jdk AS kyloBuilder
+
+ARG UID=1000
+ARG GID=1000
+ARG kylo_version=0.10.0
+
+ENV JAVA_OPTS="-Xms512M -Xmx1536M" \
+    MAVEN_OPTS="-Xms512M -Xmx1536M" \
+    MAVEN_SKIP_RC="true"
+
+USER root
+
+RUN apt update && \
+    apt install -y \
+    maven \
+    rpm
+
+RUN git clone https://github.com/teradata/kylo.git /opt/kylo && \
+    cd /opt/kylo && \
+    git checkout tags/v${kylo_version} && \
+    mvn clean install -DskipTests
+
+RUN cd /opt/kylo && \
+    mkdir install/install-tar/target/kylo && \
+    tar -C install/install-tar/target/kylo -xvf install/install-tar/target/kylo-*-dependencies.tar.gz && \
+    mkdir -p /opt/kylo/kylo-ui && \
+    cp -a install/install-tar/target/kylo/kylo-ui/lib /opt/kylo/kylo-ui/ && \
+    cp -a install/install-tar/target/kylo/kylo-ui/plugin /opt/kylo/kylo-ui/ && \
+    cp -a install/install-tar/target/kylo/bin /opt/kylo && \
+    cp -a install/install-tar/target/kylo/lib /opt/kylo
+
+##########
+
+FROM openjdk:8-jre
+
+ARG UID=1000
+ARG GID=1000
+
+ENV JAVA_OPTS="-Xms512M -Xmx1536M"
+
+COPY --from=kyloBuilder /opt/kylo /opt/kylo
+
+EXPOSE 8400
+
+CMD ["java", "-cp", "/opt/kylo/kylo-ui/conf:/opt/kylo/kylo-ui/lib/*:/opt/kylo/kylo-ui/plugin/*", "com.thinkbiganalytics.KyloUiApplication"]

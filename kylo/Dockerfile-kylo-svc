@@ -1,0 +1,79 @@
+FROM openjdk:8-jdk AS kyloBuilder
+
+ARG UID=1000
+ARG GID=1000
+ARG kylo_version=0.10.0
+ARG pg_driver_version=42.2.5
+
+ENV JAVA_OPTS="-Xms512M -Xmx1536M" \
+    MAVEN_OPTS="-Xms512M -Xmx1536M" \
+    MAVEN_SKIP_RC="true"
+
+USER root
+
+RUN apt update && \
+    apt install -y \
+    maven \
+    rpm
+
+RUN git clone https://github.com/teradata/kylo.git /opt/kylo && \
+    cd /opt/kylo && \
+    git checkout tags/v${kylo_version} && \
+    mvn clean install -DskipTests
+
+RUN cd /opt/kylo && \
+    mkdir install/install-tar/target/kylo && \
+    tar -C install/install-tar/target/kylo -xvf install/install-tar/target/kylo-*-dependencies.tar.gz && \
+    mkdir -p /opt/kylo/kylo-services && \
+    curl -o install/install-tar/target/kylo/kylo-services/lib/postgresql-${pg_driver_version}.jar http://central.maven.org/maven2/org/postgresql/postgresql/${pg_driver_version}/postgresql-${pg_driver_version}.jar && \
+    cp -a install/install-tar/target/kylo/kylo-services/lib /opt/kylo/kylo-services/ && \
+    cp -a install/install-tar/target/kylo/kylo-services/plugin /opt/kylo/kylo-services/ && \
+    cp -a install/install-tar/target/kylo/bin /opt/kylo && \
+    cp -a install/install-tar/target/kylo/lib /opt/kylo
+
+##########
+
+FROM openjdk:8-jre
+
+ARG UID=1000
+ARG GID=1000
+ARG impala_driver_version=2.6.4.1005
+
+ENV JAVA_OPTS="-Xms512M -Xmx1536M"
+
+ENV SPARK_HOME=/opt/spark
+
+COPY --from=kyloBuilder /opt/kylo /opt/kylo
+
+USER root
+
+RUN apt update && \
+    apt install -y \
+    mysql-client \
+    ca-certificates \
+    libkrb5-dev
+
+RUN rm -f /opt/kylo/kylo-services/lib/jetty* && \
+    rm -f /opt/kylo/kylo-services/lib/servlet-api* && \
+    adduser --system --shell /bin/bash kylo && \
+    addgroup kylo && \
+    adduser kylo kylo && \
+    chown -R kylo:kylo /opt/kylo
+
+# Impala JDBC driver
+RUN wget -q https://downloads.cloudera.com/connectors/impala_jdbc_${impala_driver_version}.zip && \
+    unzip impala_jdbc_${impala_driver_version}.zip && \
+    rm impala_jdbc_${impala_driver_version}.zip && \
+    unzip ClouderaImpalaJDBC-${impala_driver_version}/ClouderaImpalaJDBC4-${impala_driver_version}.zip && \
+    mv ImpalaJDBC4.jar /opt/kylo/kylo-services/plugin/ && \
+    rm -r ClouderaImpalaJDBC-${impala_driver_version}
+
+# Spark
+RUN cd /opt && wget -q https://archive.apache.org/dist/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz && \
+  tar -xzf spark-2.4.0-bin-hadoop2.7.tgz && \
+  ln -s spark-2.4.0-bin-hadoop2.7 spark && \
+  rm spark-2.4.0-bin-hadoop2.7.tgz
+
+EXPOSE 8420
+
+CMD ["java", "-cp", "/opt/kylo/kylo-services/conf:/opt/kylo/kylo-services/lib/*:/opt/kylo/kylo-services/lib/nifi-v1.2/*:/opt/kylo/kylo-services/plugin/*", "com.thinkbiganalytics.server.KyloServerApplication"]
