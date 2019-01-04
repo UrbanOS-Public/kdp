@@ -1,0 +1,149 @@
+# Default values for Kylo.
+# This is a YAML-formatted file.
+# Declare name/value pairs to be passed into your templates.
+# name: value
+
+serviceType: NodePort
+
+## Probes
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
+probe:
+  initialDelaySeconds: 30
+  timeoutSeconds: 15
+
+# Sidecar that is used to tail NiFi logs. Allows for the set up containers for tailing:
+# nifi-app
+# nifi-user
+# nifi-bootstrap
+sidecar:
+  image: busybox
+
+## Two Way SSL
+## ref:  https://github.com/apache/nifi/tree/master/nifi-docker/dockerhub#standalone-instance-two-way-ssl
+tls:
+  enabled: false
+  keystorePath: /opt/certs/keystore.jks
+  keystoreType: JKS
+  keystorePassword: QKZv1hSWAFQYZ+WU1jjF5ank+l4igeOfQRp+OSbkkrs
+  truststorePath: /opt/certs/truststore.jks
+  truststore_Password: rHkWR1gDNW3R9hgbeRsT3OM3Ue0zwGtQqcFKJD2EXWE
+  truststore_Type: JKS
+  initialAdminIdentity: 'CN=Random User, O=Apache, OU=NiFi, C=US'
+
+## NiFi configuration
+nifi:
+  antiAffinity: hard
+  properties:
+    isNode: true
+    httpPort: 8080
+    cluster:
+      secure: false
+      port: 6007
+    provenanceStorage: "8 GB"
+    siteToSite:
+      secure: false
+      port: 10000
+    ui:
+      banner: Spunky kittens!
+    dataDirectory: /opt/nifi/persistent_data
+    serviceAccount:
+      username: "dladmin"
+      password: "thinkbig"
+
+  # JVM configuration
+  jvm:
+    memory: 2g
+
+  # Number of NiFi replicas
+  replicas: 1
+
+  # Load Balancer for NiFi cluster
+  loadBalancer:
+    enabled: true
+
+  image:
+    repository: jeffgrunewald/nifi
+    pullPolicy: Always
+    tag: "1.0"
+    version: "1.6.0"
+
+  ## Configure Ingress resource that allow you to access the Drupal installation
+  ## Set up the URL
+  ## ref: http://kubernetes.io/docs/user-guide/ingress/
+  ##
+  ingress:
+    enabled: true
+    domain: nifi.smrt-751.sandbox.internal.smartcolumbusos.com
+    annotations:
+      kubernetes.io/ingress.class: alb
+      alb.ingress.kubernetes.io/scheme: internal
+      alb.ingress.kubernetes.io/subnets: subnet-0bb36f1c26703b8a8,subnet-04427b406b3bc581e,subnet-01843df137e5c51d2
+      alb.ingress.kubernetes.io/security-groups: sg-08a8f6c24cf68dea1
+      alb.ingress.kubernetes.io/tags: scos.delete.on.teardown=true
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:068920858268:certificate/f7944e01-f051-4d41-b69a-925e25ab9498
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80, "HTTPS": 443}]'
+      alb.ingress.kubernetes.io/load-balancer-attributes: "idle_timeout.timeout_seconds=300"
+      alb.ingress.kubernetes.io/actions.redirect: '{"Type": "redirect", "RedirectConfig":{"Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    # hosts:
+    #  - chart-example.local
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  # NiFi web settings
+  web:
+    httpPort: ''
+    httpHost: ''
+    httpsPort: ''
+    httpsHost: ''
+    proxyHost: ''
+
+  # NiFi remote settings
+  remote:
+    inputHost: ''
+    inputSocketPort: ''
+
+  ## Configure Persistence Volumes / Claims
+  persistence:
+    enabled: true
+
+    extra:
+      enabled: false
+    ## A manually managed Persistent Volume and Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    # existingClaim:
+
+    ## NiFi data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    annotations: {}
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    volumes:
+    #  - name: nothing
+    #    emptyDir: {}
+    mounts:
+    #  - mountPath: /var/nothing
+    #    name: nothing
+    #    readOnly: true
+
+    ## Storage Capacities for persistent volumes
+    # Storage capacity for the 'data' directory, which is used to hold things such as the flow.xml.gz, configuration, state, etc.
+    dataStorage: 1Gi
+    # Storage capacity for the FlowFile repository
+    flowfileRepoStorage: 10Gi
+    # Storage capacity for the Content repository
+    contentRepoStorage: 10Gi
+    # Storage capacity for the Provenance repository. When changing this, one should also change the properties.provenanceStorage value above, also.
+    provenanceRepoStorage: 10Gi
+    # Storage capacity for nifi logs
+    logStorage: 5Gi
