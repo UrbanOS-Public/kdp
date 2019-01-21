@@ -1,0 +1,6 @@
+global:
+  environment: sandbox
+
+resourceLimits:
+  cpu: 100m
+  memory: 256Mi
