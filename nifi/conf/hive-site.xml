@@ -11,8 +11,7 @@
   </property>
   <property>
     <name>javax.jdo.option.ConnectionURL</name>
-    <value>{{ .Values.kylo.services.properties.hive.metastore.datasource.url }}</value>
-    <description>metadata is stored in a PostgreSQL server</description>
+    <value>jdbc:postgresql://postgres/metastore</value>
   </property>
   <property>
     <name>javax.jdo.option.ConnectionDriverName</name>
@@ -21,13 +20,11 @@
   </property>
   <property>
     <name>javax.jdo.option.ConnectionUserName</name>
-    <value>{{ .Values.kylo.services.properties.hive.metastore.datasource.username }}</value>
-    <description>user name for connecting to pgsql server</description>
+    <value>hive</value>
   </property>
   <property>
     <name>javax.jdo.option.ConnectionPassword</name>
-    <value>{{ .Values.kylo.services.properties.hive.metastore.datasource.password }}</value>
-    <description>password for connecting to pgsql server</description>
+    <value>password123</value>
   </property>
   <property>
     <name>hive.metastore.schema.verification</name>

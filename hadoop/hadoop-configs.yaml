@@ -19,12 +19,12 @@ data:
     
       <property>
         <name>fs.s3a.access.key</name>
-        <value>AKIAI3LUT54EB2UZDBVA</value>
+        <value>AKIAJUQQMVJF6BLAFAOA</value>
       </property>
     
       <property>
         <name>fs.s3a.secret.key</name>
-        <value>Cb02J8XVR0ArFN+H+kIRb2ZnEfSLQASjPNNBDQnz</value>
+        <value>AVPOVPtHg3cY1cVF0fGNVe9nnX2/txRY0lEnjIHb</value>
       </property>
     
       <property>
