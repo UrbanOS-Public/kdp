@@ -5,8 +5,6 @@ ARG hive_version=3.1.1
 ARG hive_storage_version=2.7.0
 ARG htrace_version=4.0.1-incubating
 ARG spark_version=2.4.0
-ARG aws_sdk_version=1.11.467
-ARG s3_url=https://s3.us-east-2.amazonaws.com/scos-third-party-repository
 ARG tini_version=0.18.0
 
 ENV SPARK_HOME=/opt/spark
@@ -27,7 +25,11 @@ RUN wget https://archive.apache.org/dist/spark/spark-${spark_version}/spark-${sp
     rm -r *.tgz && \
     rm ${SPARK_HOME}/jars/{htrace-core*,hadoop-hdfs-*,hadoop-common-*,hadoop-auth-*,hadoop-annotations-*,hive-*.spark2}.jar
 
-RUN wget ${s3_url}/aws-java-sdk/aws-java-sdk-${aws_sdk_version}.jar -P ${SPARK_HOME}/jars/ && \
+RUN wget https://sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip -P /tmp/ && \
+    unzip "/tmp/aws-java-sdk.zip" -d "/tmp" && \
+    rm /tmp/aws-java-sdk-*/lib/aws-java-sdk-*-{javadoc,sources}.jar && \
+    mv /tmp/aws-java-sdk-*/lib/aws-java-sdk-*.jar ${SPARK_HOME}/jars && \
+    rm -r /tmp/aws-java-sdk* && \
     mvn_jars=( \
         "hadoop/hadoop-auth/${hadoop_version}/hadoop-auth-${hadoop_version}" \
         "hadoop/hadoop-aws/${hadoop_version}/hadoop-aws-${hadoop_version}" \
