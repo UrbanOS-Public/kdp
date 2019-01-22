@@ -1,10 +1,10 @@
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: hadoop-configs
+  name: {{ template "kdp.name" . }}-core-site
   labels:
-    app: hadoop
+    component: hadoop
+{{ include "kdp.labels" . | indent 4 }}
 data:
   core-site.xml: |-
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -13,18 +13,18 @@ data:
 
       <property>
         <name>fs.defaultFS</name>
-        <value>s3a://jeff-jarred-751</value>
+        <value>s3a://{{ .Values.global.objectStore.bucketName }}</value>
         <final>true</final>
       </property>
     
       <property>
         <name>fs.s3a.access.key</name>
-        <value>AKIAJUQQMVJF6BLAFAOA</value>
+        <value>{{ .Values.global.objectStore.accessKey }}</value>
       </property>
     
       <property>
         <name>fs.s3a.secret.key</name>
-        <value>AVPOVPtHg3cY1cVF0fGNVe9nnX2/txRY0lEnjIHb</value>
+        <value>{{ .Values.global.objectStore.accessSecret }}</value>
       </property>
     
       <property>

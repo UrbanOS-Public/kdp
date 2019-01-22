@@ -31,7 +31,7 @@ Create a fully qualified presto name.
 {{- else -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
-{{- printf "%s-%s" .Release.Name $name .Values.presto.name | trunc 63 | trimSuffix "-"}}
+{{- printf "%s-%s" .Release.Name .Values.presto.name | trunc 63 | trimSuffix "-"}}
 {{- else -}}
 {{- printf "%s-%s-%s" .Release.Name $name .Values.presto.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -47,7 +47,7 @@ Create a fully qualified metastore name.
 {{- else -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
-{{- printf "%s-%s" .Release.Name $name .Values.metastore.name | trunc 63 | trimSuffix "-"}}
+{{- printf "%s-%s" .Release.Name .Values.metastore.name | trunc 63 | trimSuffix "-"}}
 {{- else -}}
 {{- printf "%s-%s-%s" .Release.Name $name .Values.metastore.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -63,7 +63,7 @@ Create a fully qualified hive name.
 {{- else -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
-{{- printf "%s-%s" .Release.Name $name .Values.hive.name | trunc 63 | trimSuffix "-"}}
+{{- printf "%s-%s" .Release.Name .Values.hive.name | trunc 63 | trimSuffix "-"}}
 {{- else -}}
 {{- printf "%s-%s-%s" .Release.Name $name .Values.hive.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -79,7 +79,7 @@ Create a fully qualified postgres name.
 {{- else -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
-{{- printf "%s-%s" .Release.Name $name .Values.postgres.name | trunc 63 | trimSuffix "-"}}
+{{- printf "%s-%s" .Release.Name .Values.postgres.name | trunc 63 | trimSuffix "-"}}
 {{- else -}}
 {{- printf "%s-%s-%s" .Release.Name $name .Values.postgres.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -95,7 +95,7 @@ Create a fully qualified minio name.
 {{- else -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
-{{- printf "%s-%s" .Release.Name $name .Values.minio.name | trunc 63 | trimSuffix "-"}}
+{{- printf "%s-%s" .Release.Name .Values.minio.name | trunc 63 | trimSuffix "-"}}
 {{- else -}}
 {{- printf "%s-%s-%s" .Release.Name $name .Values.minio.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

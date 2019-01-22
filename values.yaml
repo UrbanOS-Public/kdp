@@ -1,5 +1,54 @@
+postgres:
+  enable: true
+  db:
+    name: metastore
+    user: hive
+    password: password123
+  service:
+    type: ClusterIP
+    port: 5432
+  storage:
+    persist: false
+    size: 5Gi
+    mode: ReadWriteOnce
+  deploy:
+    replicas: 1
+    container:
+      image: postgres
+      tag: 11.1-alpine
+      pullPolicy: IfNotPresent
+    updateStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+
+minio:
+  enable: true
+  storage:
+    mode: ReadWriteOnce
+    size: 5Gi
+  service:
+    type: NodePort
+    port: 9000
+  deploy:
+    replicas: 1
+    container:
+      image: minio/minio
+      tag: 
+      pullPolicy: IfNotPresent
+    updateStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1    
+
 global:
   environment: sandbox
+  objectStore:
+    bucketName: kdp-cloud-storage
+    accessKey: secret-key
+    accessSecret: super-secret
 
 resourceLimits:
   cpu: 100m

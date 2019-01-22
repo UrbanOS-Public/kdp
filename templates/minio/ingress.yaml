@@ -1,0 +1,32 @@
+{{- if .Values.minio.enable }}
+{{- $serviceName := include "kdp.minio.fullname" . }}
+{{- $servicePort := .Values.minio.service.port }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+{{- if .Values.minio.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.minio.ingress.annotations | trim | indent 4 }}
+{{- if .Values.global.ingress.annotations }}
+{{ toYaml .Values.global.ingress.annotations | trim | indent 4 }}
+{{- end }}
+{{- end }}
+  name: {{ template "kdp.minio.fullname" . }}
+  labels:
+    component: minio
+{{ include "kdp.labels" . | indent 4 }}
+spec:
+  backend:
+    serviceName: {{ $serviceName }}
+    servicePort: {{ $servicePort }}
+  rules:
+{{- range .Values.minio.ingress.hosts }}
+{{- $url := splitList "/" . }}
+  - host: {{ first $url }}
+    http:
+      paths:
+      - path: /{{ rest $url | join "/" }}
+        backend:
+          serviceName: {{ .Values.minio.ingress.serviceName | default $serviceName }}
+          servicePort: {{ .Values.minio.ingress.servicePort | default $servicePort }}
+{{- end }}
