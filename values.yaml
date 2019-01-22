@@ -1,3 +1,20 @@
+metastore:
+  service:
+    type: ClusterIP
+    port: 9083
+  warehouseDir: warehouse
+  deploy:
+    replicas: 1
+    container:
+      image: jeffgrunewald/metastore
+      tag: '1.0'
+      pullPolicy: IfNotPresent
+    updateStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+
 postgres:
   enable: true
   db:
@@ -35,7 +52,7 @@ minio:
     replicas: 1
     container:
       image: minio/minio
-      tag: 
+      tag: RELEASE.2019-01-16T21-44-08Z
       pullPolicy: IfNotPresent
     updateStrategy:
       type: RollingUpdate

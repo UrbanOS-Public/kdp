@@ -1,10 +1,10 @@
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: metastore-site
+  name: {{ template "kdp.metastore.fullname" . }}-config
   labels:
-    app: hive-metastore
+    component: metastore
+{{ include "kdp.labels" . | indent 4 }}
 data:
   metastore-site.xml: |-
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -12,12 +12,12 @@ data:
     <configuration>
       <property>
         <name>metastore.thrift.uris</name>
-        <value>thrift://hive-metastore:9083</value>
+        <value>thrift://{{ template "kdp.metastore.fullname" . }}:{{ .Values.metastore.service.port }}</value>
         <description>Thrift URI for the remote metastore. Used by metastore client to connect to remote metastore.</description>
       </property>
       <property>
         <name>metastore.warehouse.dir</name>
-        <value>s3a://jeff-jarred-751/hive-s3</value>
+        <value>s3a://{{ .Values.global.objectStore.bucketName }}/{{ .Values.metastore.warehouseDir }}</value>
       </property>
       <property>
         <name>metastore.task.threads.always</name>
@@ -29,7 +29,7 @@ data:
       </property>
       <property>
         <name>javax.jdo.option.ConnectionURL</name>
-        <value>jdbc:postgresql://postgres/metastore</value>
+        <value>jdbc:postgresql://{{ template "kdp.postgres.fullname" . }}/{{ .Values.postgres.db.name }}</value>
       </property>
       <property>
         <name>javax.jdo.option.ConnectionDriverName</name>
@@ -37,11 +37,11 @@ data:
       </property>
       <property>
         <name>javax.jdo.option.ConnectionUserName</name>
-        <value>hive</value>
+        <value>{{ .Values.postgres.db.user }}</value>
       </property>
       <property>
         <name>javax.jdo.option.ConnectionPassword</name>
-        <value>password123</value>
+        <value>{{ .Values.postgres.db.password }}</value>
       </property>
       <property>
         <name>metastore.metastore.event.db.notification.api.auth</name>
