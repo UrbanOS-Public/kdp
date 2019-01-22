@@ -28,7 +28,7 @@ RUN wget https://archive.apache.org/dist/spark/spark-${spark_version}/spark-${sp
 RUN wget https://sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip -P /tmp/ && \
     unzip "/tmp/aws-java-sdk.zip" -d "/tmp" && \
     rm /tmp/aws-java-sdk-*/lib/aws-java-sdk-*-{javadoc,sources}.jar && \
-    mv /tmp/aws-java-sdk-*/lib/aws-java-sdk-*.jar ${SPARK_HOME}/jars && \
+    mv /tmp/aws-java-sdk-*/lib/aws-java-sdk-*.jar ${SPARK_HOME}/jars/ && \
     rm -r /tmp/aws-java-sdk* && \
     mvn_jars=( \
         "hadoop/hadoop-auth/${hadoop_version}/hadoop-auth-${hadoop_version}" \
