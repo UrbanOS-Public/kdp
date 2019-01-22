@@ -1,3 +1,33 @@
+presto:
+  workers: 2
+  service:
+    type: NodePort
+    port: 8080
+  logLevel: INFO
+  environment: production
+  query:
+    maxMemory: 4GB
+    maxMemoryPerNode: 1GB
+  jvm:
+    maxHeapSize: 8G
+    gcMethod:
+      type: UseG1GC
+      g1:
+        heapRegionSize: 32M
+  deploy:
+    replicas: 1
+    container:
+      image: jeffgrunewald/presto
+      tag: '1.1'
+      pullPolicy: IfNotPresent
+    updateStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+  ingress:
+    enable: true
+
 metastore:
   service:
     type: ClusterIP

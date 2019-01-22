@@ -1,0 +1,82 @@
+{{- if gt (int .Values.presto.workers) 0 }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "kdp.presto.fullname" . }}-worker
+  labels:
+    component: presto
+    role: worker
+{{ include "kdp.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      component: presto
+      role: worker
+{{ include "kdp.labels" . | indent 6 }}
+  replicas: {{ .Values.presto.workers }}
+  strategy:
+{{ toYaml .Values.presto.deploy.updateStrategy | trim | indent 4 }}
+  template:
+    metadata:
+      labels:
+        component: presto
+        role: worker
+{{ include "kdp.labels" . | indent 8 }}
+    spec:
+      containers:
+      - name: presto-worker
+        image: {{ .Values.presto.deploy.container.image }}:{{ .Values.presto.deploy.container.port }}
+        imagePullPolicy: {{ .Values.presto.deploy.container.pullPolicy }}
+        command:
+        - "launcher"
+        args:
+        - "run"
+        volumeMounts:
+        - mountPath: /presto/etc/node.properties
+          name: presto-configs
+          subPath: node.properties
+        - mountPath: /presto/etc/jvm.config
+          name: presto-configs
+          subPath: jvm.config
+        - mountPath: /presto/etc/config.properties
+          name: worker-config
+          subPath: config.properties
+        - mountPath: /presto/etc/log.properties
+          name: presto-configs
+          subPath: log.properties
+        - mountPath: /presto/etc/health_check.sh
+          name: worker-config
+          subPath: health_check.sh
+        - mountPath: /presto/etc/catalog/hive.properties
+          name: presto-configs
+          subPath: hive.properties
+        - mountPath: /etc/hadoop/conf/core-site.xml
+          name: core-site
+          subPath: core-site.xml
+        livenessProbe:
+          exec:
+            command:
+              - /bin/bash
+              - /presto/etc/health_check.sh
+          initialDelaySeconds: 10
+          periodSeconds: 25
+        readinessProbe:
+          exec:
+            command:
+              - /bin/bash
+              - /presto/etc/health_check.sh
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+{{ include "kdp.resources" . | trim | indent 12 }}
+      volumes:
+      - name: presto-configs
+        configMap:
+          name: {{ template "kdp.presto.fullname" . }}-configs
+      - name: worker-config
+        configMap:
+          name: {{ template "kdp.presto.fullname" . }}-worker
+      - name: core-site
+        configMap:
+          name: {{ template "kdp.name" . }}-core-site
+{{- end }}
