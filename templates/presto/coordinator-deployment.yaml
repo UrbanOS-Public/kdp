@@ -17,6 +17,8 @@ spec:
 {{ toYaml .Values.presto.deploy.updateStrategy | trim | indent 4 }}
   template:
     metadata:
+      annotations:
+        checksum/common-configmap: {{ include (print $.Template.BasePath "/presto/presto-configs.yaml") . | sha256sum }}
       labels:
         component: presto
         role: coordinator

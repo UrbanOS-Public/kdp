@@ -6,7 +6,7 @@ presto:
   logLevel: INFO
   environment: production
   query:
-    maxMemory: 4GB
+    maxMemory: 1GB
     maxMemoryPerNode: 1GB
   jvm:
     maxHeapSize: 8G
@@ -32,7 +32,7 @@ metastore:
   service:
     type: ClusterIP
     port: 9083
-  warehouseDir: warehouse
+  warehouseDir: hive-s3
   deploy:
     replicas: 1
     container:
@@ -71,7 +71,7 @@ postgres:
         maxUnavailable: 1
 
 minio:
-  enable: true
+  enable: false
   storage:
     mode: ReadWriteOnce
     size: 5Gi
