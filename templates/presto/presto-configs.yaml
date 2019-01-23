@@ -28,6 +28,6 @@ data:
     hive.metastore.uri=thrift://{{ template "kdp.metastore.fullname" . }}:{{ .Values.metastore.service.port }}
     hive.metastore.username={{ .Values.postgres.db.user }}
     hive.config.resources=/etc/hadoop/conf/core-site.xml
-    hive.s3.aws-access-key={{ .Values.objectStore.accessKey }}
-    hive.s3.aws-secret-key={{ .Values.objectStore.accessSecret }}
+    hive.s3.aws-access-key={{ .Values.global.objectStore.accessKey }}
+    hive.s3.aws-secret-key={{ .Values.global.objectStore.accessSecret }}
     hive.s3.path-style-access=true

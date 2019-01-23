@@ -31,9 +31,9 @@ Create a fully qualified presto name.
 {{- else -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
-{{- printf "%s-%s" .Release.Name .Values.presto.name | trunc 63 | trimSuffix "-"}}
+{{- printf "%s-%s" .Release.Name "presto" | trunc 63 | trimSuffix "-"}}
 {{- else -}}
-{{- printf "%s-%s-%s" .Release.Name $name .Values.presto.name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s-%s" .Release.Name $name "presto" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
@@ -47,9 +47,9 @@ Create a fully qualified metastore name.
 {{- else -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
-{{- printf "%s-%s" .Release.Name .Values.metastore.name | trunc 63 | trimSuffix "-"}}
+{{- printf "%s-%s" .Release.Name "metastore" | trunc 63 | trimSuffix "-"}}
 {{- else -}}
-{{- printf "%s-%s-%s" .Release.Name $name .Values.metastore.name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s-%s" .Release.Name $name "metastore" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
@@ -63,9 +63,9 @@ Create a fully qualified hive name.
 {{- else -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
-{{- printf "%s-%s" .Release.Name .Values.hive.name | trunc 63 | trimSuffix "-"}}
+{{- printf "%s-%s" .Release.Name "hive" | trunc 63 | trimSuffix "-"}}
 {{- else -}}
-{{- printf "%s-%s-%s" .Release.Name $name .Values.hive.name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s-%s" .Release.Name $name "hive" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
@@ -79,9 +79,9 @@ Create a fully qualified postgres name.
 {{- else -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
-{{- printf "%s-%s" .Release.Name .Values.postgres.name | trunc 63 | trimSuffix "-"}}
+{{- printf "%s-%s" .Release.Name "postgres" | trunc 63 | trimSuffix "-"}}
 {{- else -}}
-{{- printf "%s-%s-%s" .Release.Name $name .Values.postgres.name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s-%s" .Release.Name $name "postgres" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
@@ -95,9 +95,9 @@ Create a fully qualified minio name.
 {{- else -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
-{{- printf "%s-%s" .Release.Name .Values.minio.name | trunc 63 | trimSuffix "-"}}
+{{- printf "%s-%s" .Release.Name "minio" | trunc 63 | trimSuffix "-"}}
 {{- else -}}
-{{- printf "%s-%s-%s" .Release.Name $name .Values.minio.name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s-%s" .Release.Name $name "minio" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

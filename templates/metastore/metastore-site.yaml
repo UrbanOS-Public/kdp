@@ -13,7 +13,6 @@ data:
       <property>
         <name>metastore.thrift.uris</name>
         <value>thrift://{{ template "kdp.metastore.fullname" . }}:{{ .Values.metastore.service.port }}</value>
-        <description>Thrift URI for the remote metastore. Used by metastore client to connect to remote metastore.</description>
       </property>
       <property>
         <name>metastore.warehouse.dir</name>

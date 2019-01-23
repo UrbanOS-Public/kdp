@@ -1,29 +1,29 @@
----
+{{- if .Values.hive.enable -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hive-server
+  name: {{ template "kdp.hive.fullname" . }}
   labels:
-    app: hive-server
+    component: hive
+{{ include "kdp.labels" . | indent 4 }}    
 spec:
   selector:
     matchLabels:
-      app: hive-server
-  replicas: 1
+      component: hive
+{{ include "kdp.labels" . | indent 6 }}
+  replicas: {{ .Values.hive.deploy.replicas }}
   strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
+{{ toYaml .Values.presto.deploy.updateStrategy | trim | indent 4 }}
   template:
     metadata:
       labels:
-        app: hive-server
+        component: hive
+{{ include "kdp.labels" . | indent 8 }}
     spec:
       containers:
-      - name: hive-server
-        image: jeffgrunewald/de-doop:1.49
-        imagePullPolicy: IfNotPresent
+      - name: hive
+        image: {{ .Values.hive.deploy.container.image }}:{{ .Values.hive.deploy.container.tag }}
+        imagePullPolicy: {{ .Values.hive.deploy.container.pullPolicy }}
         workingDir: /opt/hive
         command:
         - /bin/sh
@@ -31,8 +31,8 @@ spec:
         args:
         - 'cp /tmp/hive-site.xml /opt/hive/conf/ && sed -i "s/POD_IP/${POD_IP//./-}/" /opt/hive/conf/hive-site.xml && ./bin/hiveserver2'
         ports:
-        - containerPort: 10000
-          name: hive-server
+        - containerPort: {{ .Values.hive.service.port }}
+          name: hive
         env:
         - name: POD_IP
           valueFrom:
@@ -43,12 +43,13 @@ spec:
           name: hive-site
           subPath: hive-site.xml
         - mountPath: /opt/hadoop/etc/hadoop/core-site.xml
-          name: hadoop-configs
+          name: core-site
           subPath: core-site.xml
       volumes:
       - name: hive-site
         configMap:
-          name: hive-site
-      - name: hadoop-configs
+          name: {{ template "kdp.hive.fullname" . }}-config
+      - name: core-site
         configMap:
-          name: hadoop-configs
+          name: {{ template "kdp.name" . }}-core-site
+{{- end }}

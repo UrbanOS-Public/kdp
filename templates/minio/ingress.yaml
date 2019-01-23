@@ -1,6 +1,7 @@
-{{- if .Values.minio.enable }}
+{{- if .Values.minio.enable -}}
+{{- if .Values.minio.ingress.enable -}}
 {{- $serviceName := include "kdp.minio.fullname" . }}
-{{- $servicePort := .Values.minio.service.port }}
+{{- $servicePort := .Values.minio.service.port -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -29,4 +30,6 @@ spec:
         backend:
           serviceName: {{ .Values.minio.ingress.serviceName | default $serviceName }}
           servicePort: {{ .Values.minio.ingress.servicePort | default $servicePort }}
+{{- end }}
+{{- end }}
 {{- end }}

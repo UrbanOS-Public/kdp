@@ -88,7 +88,45 @@ minio:
       type: RollingUpdate
       rollingUpdate:
         maxSurge: 1
-        maxUnavailable: 1    
+        maxUnavailable: 1
+  ingress:
+    enable: true
+
+hive:
+  enable: true
+  service:
+    type: NodePort
+    port: 10000
+  deploy:
+    replicas: 1
+    container:
+      image: jeffgrunewald/hive
+      tag: '1.0'
+      pullPolicy:
+    updateStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+  spark:
+    container:
+      image: jeffgrunewald/spark-2.4-base
+      tag: '1.1'
+      pullPolicy: IfNotPresent
+    master:
+      url: https://kubernetes.default.svc.cluster.local:443
+    executor:
+      instances: 2
+      memory: 512m
+      labels:
+      - key: hadoop-less
+        value: 'true'
+    driver:
+      labels:
+      - key: hadoop-less
+        value: 'true'
+    appName: kdp
+    deployMode: cluster
 
 global:
   environment: sandbox

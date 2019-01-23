@@ -1,10 +1,11 @@
----
+{{- if .Values.hive.enable -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: hive-site
+  name: {{ template "kdp.hive.fullname" . }}-config
   labels:
-    app: hive-server
+    component: hive
+{{ include "kdp.labels" . | indent 4 }}
 data:
   hive-site.xml: |-
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -12,15 +13,15 @@ data:
     <configuration>
       <property>
         <name>hive.metastore.uris</name>
-        <value>thrift://hive-metastore:9083</value>
+        <value>thrift://{{ template "kdp.metastore.fullname" . }}:{{ .Values.metastore.service.port }}</value>
       </property>
       <property>
         <name>hive.metastore.warehouse.dir</name>
-        <value>s3a://jeff-jarred-751/hive-s3</value>
+        <value>s3a://{{ .Values.global.objectStore.bucketName }}/{{ .Values.metastore.warehouseDir }}</value>
       </property>
       <property>
         <name>javax.jdo.option.ConnectionURL</name>
-        <value>jdbc:postgresql://postgres/metastore</value>
+        <value>jdbc:postgresql://{{ template "kdp.postgres.fullname" . }}/{{ .Values.postgres.db.name }}</value>
       </property>
       <property>
         <name>javax.jdo.option.ConnectionDriverName</name>
@@ -28,11 +29,11 @@ data:
       </property>
       <property>
         <name>javax.jdo.option.ConnectionUserName</name>
-        <value>hive</value>
+        <value>{{ .Values.postgres.db.user }}</value>
       </property>
       <property>
         <name>javax.jdo.option.ConnectionPassword</name>
-        <value>password123</value>
+        <value>{{ .Values.postgres.db.password }}</value>
       </property>
       <property>
         <name>datanucleus.autoCreateSchema</name>
@@ -44,7 +45,7 @@ data:
       </property>
       <property>
         <name>datanucleus.autoCreateTables</name>
-        <value>True</value>
+        <value>true</value>
       </property>
       <property>
         <name>hive.execution.engine</name>
@@ -68,7 +69,7 @@ data:
       </property>
       <property>
         <name>spark.master</name>
-        <value>k8s://https://kubernetes.default.svc.cluster.local:443</value>
+        <value>k8s://{{ .Values.hive.spark.master.url }}</value>
       </property>
       <property>
         <name>spark.eventLog.enabled</name>
@@ -80,7 +81,7 @@ data:
       </property>
       <property>
         <name>spark.executor.memory</name>
-        <value>512m</value>
+        <value>{{ .Values.hive.spark.executor.memory }}</value>
       </property>
       <property>
         <name>spark.serializer</name>
@@ -88,19 +89,19 @@ data:
       </property>
       <property>
         <name>spark.kubernetes.namespace</name>
-        <value>default</value>
+        <value>{{ .Values.hive.spark.namespace | default .Release.Namespace }}</value>
       </property>
       <property>
         <name>spark.kubernetes.container.image</name>
-        <value>jeffgrunewald/scos-spark:1.11</value>
+        <value>{{ .Values.hive.spark.container.image }}:{{ .Values.hive.spark.container.tag }}</value>
       </property>
       <property>
         <name>spark.kubernetes.container.image.pullPolicy</name>
-        <value>IfNotPresent</value>
+        <value>{{ .Values.hive.spark.container.pullPolicy }}</value>
       </property>
       <property>
         <name>spark.executor.instances</name>
-        <value>2</value>
+        <value>{{ .Values.hive.spark.executor.instances }}</value>
       </property>
       <property>
         <name>spark.kubernetes.allocation.batch.size</name>
@@ -112,23 +113,31 @@ data:
       </property>
       <property>
         <name>hive.spark.client.rpc.server.address</name>
-        <value>POD_IP.default.pod.cluster.local</value>
+        <value>POD_IP.{{ .Release.Namespace }}.pod.cluster.local</value>
       </property>
+{{- if .Values.hive.spark.driver.labels }}
+      {{- range $driverLabel := .Values.hive.spark.driver.labels }}
       <property>
-        <name>spark.kubernetes.driver.label.seatOf</name>
-        <value>pants</value>
+        <name>spark.kubernetes.driver.label.{{ $driverLabel.key }}</name>
+        <value>{{ $driverLabel.value }}</value>
       </property>
+      {{- end }}
+{{- end }}
+{{- if .Values.hive.spark.executor.labels }}
+      {{- range $executorLabel := .Values.hive.spark.executor.labels }}
       <property>
-        <name>spark.kubernetes.executor.label.seatOf</name>
-        <value>pants</value>
+        <name>spark.kubernetes.executor.label.{{ $executorLabel.key }}</name>
+        <value>{{ $executorLabel.value }}</value>
       </property>
+      {{- end }}
+{{- end }}
       <property>
         <name>spark.app.name</name>
-        <value>de-doop</value>
+        <value>{{ .Values.hive.spark.appName }}</value>
       </property>
       <property>
         <name>spark.submit.deployMode</name>
-        <value>cluster</value>
+        <value>{{ .Values.hive.spark.deployMode }}</value>
       </property>
       <property>
         <name>spark.driver.extraLibraryPath</name>
@@ -139,3 +148,4 @@ data:
         <value>-Dlog4j.configuration=file:///opt/spark/conf/log4j.properties</value>
       </property>
     </configuration>
+{{- end }}

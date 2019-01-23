@@ -1,6 +1,6 @@
-{{- if .Values.presto.ingress.enable }}
+{{- if .Values.presto.ingress.enable -}}
 {{- $serviceName := include "kdp.presto.fullname" . }}
-{{- $servicePort := .Values.presto.service.port }}
+{{- $servicePort := .Values.presto.service.port -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -30,4 +30,5 @@ spec:
         backend:
           serviceName: {{ .Values.presto.ingress.serviceName | default $serviceName }}
           servicePort: {{ .Values.presto.ingress.servicePort | default $servicePort }}
+{{- end }}
 {{- end }}

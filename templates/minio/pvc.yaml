@@ -1,4 +1,4 @@
-{{- if .Values.minio.enable }}
+{{- if .Values.minio.enable -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:

@@ -1,5 +1,5 @@
-{{- if .Values.postgres.enable }}
-{{- if .Values.postgres.storage.persist }}
+{{- if .Values.postgres.enable -}}
+{{- if .Values.postgres.storage.persist -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:

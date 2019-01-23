@@ -1,4 +1,4 @@
-{{- if .Values.minio.enable }}
+{{- if .Values.minio.enable -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
