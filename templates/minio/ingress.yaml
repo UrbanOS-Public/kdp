@@ -28,8 +28,8 @@ spec:
       paths:
       - path: /{{ rest $url | join "/" }}
         backend:
-          serviceName: {{ .Values.minio.ingress.serviceName | default $serviceName }}
-          servicePort: {{ .Values.minio.ingress.servicePort | default $servicePort }}
+          serviceName: {{ default $serviceName $.Values.minio.ingress.serviceName }}
+          servicePort: {{ default $servicePort $.Values.minio.ingress.servicePort }}
 {{- end }}
 {{- end }}
 {{- end }}

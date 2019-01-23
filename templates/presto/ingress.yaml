@@ -28,7 +28,7 @@ spec:
       paths:
       - path: /{{ rest $url | join "/" }}
         backend:
-          serviceName: {{ .Values.presto.ingress.serviceName | default $serviceName }}
-          servicePort: {{ .Values.presto.ingress.servicePort | default $servicePort }}
+          serviceName: {{ default $serviceName $.Values.presto.ingress.serviceName }}
+          servicePort: {{ default $servicePort $.Values.presto.ingress.servicePort }}
 {{- end }}
 {{- end }}

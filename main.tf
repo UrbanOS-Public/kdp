@@ -45,12 +45,16 @@ presto:
     - "presto.${data.terraform_remote_state.env_remote_state.dns_zone_name}/*"
     annotations:
       alb.ingress.kubernetes.io/healthcheck-path: /v1/cluster
+    serviceName: redirect
+    servicePort: use-annotation
 minio:
   ingress:
     hosts:
     - "minio.${data.terraform_remote_state.env_remote_state.dns_zone_name}/*"
     annotations:
       alb.ingress.kubernetes.io/healthcheck-path: /minio/health/live
+    serviceName: redirect
+    servicePort: use-annotation
 EOF
 }
 
