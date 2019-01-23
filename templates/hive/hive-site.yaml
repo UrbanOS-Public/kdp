@@ -1,0 +1,151 @@
+{{- if .Values.hive.enable -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kdp.hive.fullname" . }}-config
+  labels:
+    component: hive
+{{ include "kdp.labels" . | indent 4 }}
+data:
+  hive-site.xml: |-
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+      <property>
+        <name>hive.metastore.uris</name>
+        <value>thrift://{{ template "kdp.metastore.fullname" . }}:{{ .Values.metastore.service.port }}</value>
+      </property>
+      <property>
+        <name>hive.metastore.warehouse.dir</name>
+        <value>s3a://{{ .Values.global.objectStore.bucketName }}/{{ .Values.metastore.warehouseDir }}</value>
+      </property>
+      <property>
+        <name>javax.jdo.option.ConnectionURL</name>
+        <value>jdbc:postgresql://{{ template "kdp.postgres.fullname" . }}/{{ .Values.postgres.db.name }}</value>
+      </property>
+      <property>
+        <name>javax.jdo.option.ConnectionDriverName</name>
+        <value>org.postgresql.Driver</value>
+      </property>
+      <property>
+        <name>javax.jdo.option.ConnectionUserName</name>
+        <value>{{ .Values.postgres.db.user }}</value>
+      </property>
+      <property>
+        <name>javax.jdo.option.ConnectionPassword</name>
+        <value>{{ .Values.postgres.db.password }}</value>
+      </property>
+      <property>
+        <name>datanucleus.autoCreateSchema</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>datanucleus.fixedDatastore</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>datanucleus.autoCreateTables</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>hive.execution.engine</name>
+        <value>spark</value>
+      </property>
+      <property>
+        <name>hive.support.concurrency</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>hive.exec.dynamic.partition.mode</name>
+        <value>nonstrict</value>
+      </property>
+      <property>
+        <name>hive.txn.manager</name>
+        <value>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager</value>
+      </property>
+      <property>
+        <name>hive.metastore.event.db.notification.api.auth</name>
+        <value>false</value>
+      </property>
+      <property>
+        <name>spark.master</name>
+        <value>k8s://{{ .Values.hive.spark.master.url }}</value>
+      </property>
+      <property>
+        <name>spark.eventLog.enabled</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>spark.eventLog.dir</name>
+        <value>/tmp</value>
+      </property>
+      <property>
+        <name>spark.executor.memory</name>
+        <value>{{ .Values.hive.spark.executor.memory }}</value>
+      </property>
+      <property>
+        <name>spark.serializer</name>
+        <value>org.apache.spark.serializer.KryoSerializer</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.namespace</name>
+        <value>{{ .Values.hive.spark.namespace | default .Release.Namespace }}</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.container.image</name>
+        <value>{{ .Values.hive.spark.container.image }}:{{ .Values.hive.spark.container.tag }}</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.container.image.pullPolicy</name>
+        <value>{{ .Values.hive.spark.container.pullPolicy }}</value>
+      </property>
+      <property>
+        <name>spark.executor.instances</name>
+        <value>{{ .Values.hive.spark.executor.instances }}</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.allocation.batch.size</name>
+        <value>2</value>
+      </property>
+      <property>
+        <name>spark.kubernetes.allocation.batch.delay</name>
+        <value>10s</value>
+      </property>
+      <property>
+        <name>hive.spark.client.rpc.server.address</name>
+        <value>POD_IP.{{ .Release.Namespace }}.pod.cluster.local</value>
+      </property>
+{{- if .Values.hive.spark.driver.labels }}
+      {{- range $driverLabel := .Values.hive.spark.driver.labels }}
+      <property>
+        <name>spark.kubernetes.driver.label.{{ $driverLabel.key }}</name>
+        <value>{{ $driverLabel.value }}</value>
+      </property>
+      {{- end }}
+{{- end }}
+{{- if .Values.hive.spark.executor.labels }}
+      {{- range $executorLabel := .Values.hive.spark.executor.labels }}
+      <property>
+        <name>spark.kubernetes.executor.label.{{ $executorLabel.key }}</name>
+        <value>{{ $executorLabel.value }}</value>
+      </property>
+      {{- end }}
+{{- end }}
+      <property>
+        <name>spark.app.name</name>
+        <value>{{ .Values.hive.spark.appName }}</value>
+      </property>
+      <property>
+        <name>spark.submit.deployMode</name>
+        <value>{{ .Values.hive.spark.deployMode }}</value>
+      </property>
+      <property>
+        <name>spark.driver.extraLibraryPath</name>
+        <value>/opt/hadoop/lib/native</value>
+      </property>
+      <property>
+        <name>spark.executor.extraJavaOptions</name>
+        <value>-Dlog4j.configuration=file:///opt/spark/conf/log4j.properties</value>
+      </property>
+    </configuration>
+{{- end }}

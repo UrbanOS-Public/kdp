@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kdp.presto.fullname" . }}-configs
+  labels:
+    component: presto
+{{ include "kdp.labels" . | indent 4 }}
+data:
+  node.properties: |
+    node.environment=production
+    node.data-dir=/presto/etc/data
+
+  jvm.config: |
+    -server
+    -Xmx{{ .Values.presto.jvm.maxHeapSize }}
+    -XX:+{{ .Values.presto.jvm.gcMethod.type }}
+    -XX:G1HeapRegionSize={{ .Values.presto.jvm.gcMethod.g1.heapRegionSize }}
+    -XX:+UseGCOverheadLimit
+    -XX:+ExplicitGCInvokesConcurrent
+    -XX:+HeapDumpOnOutOfMemoryError
+    -XX:+ExitOnOutOfMemoryError
+
+  log.properties: |
+    com.facebook.presto={{ .Values.presto.logLevel }}
+
+  hive.properties: |
+    connector.name=hive-hadoop2
+    hive.metastore.uri=thrift://{{ template "kdp.metastore.fullname" . }}:{{ .Values.metastore.service.port }}
+    hive.metastore.username={{ .Values.postgres.db.user }}
+    hive.config.resources=/etc/hadoop/conf/core-site.xml
+    hive.s3.aws-access-key={{ .Values.global.objectStore.accessKey }}
+    hive.s3.aws-secret-key={{ .Values.global.objectStore.accessSecret }}
+    hive.s3.path-style-access=true
+{{- if .Values.minio.enable }}
+    hive.s3.endpoint=http://{{ template "kdp.minio.fullname" . }}:{{ .Values.minio.service.port }}
+    hive.s3.ssl.enabled=false
+{{- end }}

@@ -1,0 +1,34 @@
+{{- if .Values.presto.ingress.enable -}}
+{{- $serviceName := include "kdp.presto.fullname" . }}
+{{- $servicePort := .Values.presto.service.port -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+{{- if .Values.presto.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.presto.ingress.annotations | trim | indent 4 }}
+{{- if .Values.global.ingress.annotations }}
+{{ toYaml .Values.global.ingress.annotations | trim | indent 4 }}
+{{- end }}
+{{- end }}
+  name: {{ template "kdp.presto.fullname" . }}
+  labels:
+    component: presto
+    role: coordinator
+{{ include "kdp.labels" . | indent 4 }}
+spec:
+  backend:
+    serviceName: {{ $serviceName }}
+    servicePort: {{ $servicePort }}
+  rules:
+{{- range .Values.presto.ingress.hosts }}
+{{- $url := splitList "/" . }}
+  - host: {{ first $url }}
+    http:
+      paths:
+      - path: /{{ rest $url | join "/" }}
+        backend:
+          serviceName: {{ default $serviceName $.Values.presto.ingress.serviceName }}
+          servicePort: {{ default $servicePort $.Values.presto.ingress.servicePort }}
+{{- end }}
+{{- end }}

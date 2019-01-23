@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "kdp.presto.fullname" . }}-coord
+  labels:
+    component: presto
+    role: coordinator
+{{ include "kdp.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      component: presto
+      role: coordinator
+{{ include "kdp.labels" . | indent 6 }}
+  replicas: {{ .Values.presto.deploy.replicas }}
+  strategy:
+{{ toYaml .Values.presto.deploy.updateStrategy | trim | indent 4 }}
+  template:
+    metadata:
+      labels:
+        component: presto
+        role: coordinator
+{{ include "kdp.labels" . | indent 8 }}
+    spec:
+      containers:
+      - name: presto-coordinator
+        image: {{ .Values.presto.deploy.container.image }}:{{ .Values.presto.deploy.container.tag }}
+        imagePullPolicy: {{ .Values.presto.deploy.container.pullPolicy }}
+        command:
+        - "launcher"
+        args:
+        - "run"
+        volumeMounts:
+        - mountPath: /presto/etc/node.properties
+          name: presto-configs
+          subPath: node.properties
+        - mountPath: /presto/etc/jvm.config
+          name: presto-configs
+          subPath: jvm.config
+        - mountPath: /presto/etc/config.properties
+          name: coordinator-config
+          subPath: config.properties
+        - mountPath: /presto/etc/log.properties
+          name: presto-configs
+          subPath: log.properties
+        - mountPath: /presto/etc/catalog/hive.properties
+          name: presto-configs
+          subPath: hive.properties
+        - mountPath: /etc/hadoop/conf/core-site.xml
+          name: core-site
+          subPath: core-site.xml
+        ports:
+        - name: http-coord
+          containerPort: {{ .Values.presto.service.port }}
+        livenessProbe:
+          httpGet:
+            path: /v1/cluster
+            port: http-coord
+        readinessProbe:
+          httpGet:
+            path: /v1/cluster
+            port: http-coord
+      volumes:
+      - name: presto-configs
+        configMap:
+          name: {{ template "kdp.presto.fullname" . }}-configs
+      - name: coordinator-config
+        configMap:
+          name: {{ template "kdp.presto.fullname" . }}-coordinator
+      - name: core-site
+        configMap:
+          name: {{ template "kdp.name" . }}-core-site

@@ -1,0 +1,18 @@
+{{- if .Values.hive.enable -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "kdp.hive.fullname" . }}
+  labels:
+    component: hive
+{{ include "kdp.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.hive.service.type }}
+  ports:
+  - port: {{ .Values.hive.service.port }}
+    targetPort: hive
+    name: hive
+  selector:
+    component: hive
+{{ include "kdp.labels" . | indent 4 }}
+{{- end }}
