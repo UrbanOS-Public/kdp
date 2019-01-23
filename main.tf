@@ -20,8 +20,8 @@ data "terraform_remote_state" "env_remote_state" {
 }
 
 resource "local_file" "kubeconfig" {
-  file    = "${path.module}/outputs/kubeconfig"
-  content = "${data.terraform_remote_state.env_remote_state.eks_cluster_kubeconfig}"
+  filename = "${path.module}/outputs/kubeconfig"
+  content  = "${data.terraform_remote_state.env_remote_state.eks_cluster_kubeconfig}"
 }
 
 resource "local_file" "helm_vars" {
