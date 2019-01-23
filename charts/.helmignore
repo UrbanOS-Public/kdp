@@ -22,6 +22,8 @@
 # Infrastructure cruft
 .terraform/
 terraform.tfstate.d/
+terraform/
+shared/
 *.plan
 Jenkinsfile
 images/

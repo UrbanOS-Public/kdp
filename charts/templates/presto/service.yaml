@@ -9,8 +9,11 @@ metadata:
 spec:
   type: {{ .Values.presto.service.type }}
   ports:
+  - port: 8443
+    targetPort: 8443
+    name: https-coord
   - port: {{ .Values.presto.service.port }}
-    targetPort: http-coord
+    targetPort: {{ .Values.presto.service.port }}
     name: http-coord
   selector:
     component: presto

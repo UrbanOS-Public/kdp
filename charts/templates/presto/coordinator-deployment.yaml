@@ -17,11 +17,35 @@ spec:
 {{ toYaml .Values.presto.deploy.updateStrategy | trim | indent 4 }}
   template:
     metadata:
+      annotations:
+        checksum/coordinator-configmap: {{ include (print $.Template.BasePath "/presto/coordinator-config.yaml") . | sha256sum }}
+        checksum/common-configmap: {{ include (print $.Template.BasePath "/presto/presto-configs.yaml") . | sha256sum }}
+        checksum/core-site-configmap: {{ include (print $.Template.BasePath "/shared-configs/core-site.yaml") . | sha256sum }}
       labels:
         component: presto
         role: coordinator
 {{ include "kdp.labels" . | indent 8 }}
     spec:
+      initContainers:
+      - name: gen-jks
+        image: {{ .Values.presto.deploy.container.image }}:{{ .Values.presto.deploy.container.tag }}
+        imagePullPolicy: {{ .Values.presto.deploy.container.pullPolicy }}
+        command:
+        - /bin/bash
+        - -c
+        args:
+        - |
+          keytool -genkey \
+            -storepass password123 \
+            -keypass password123 \
+            -alias smrt-831.sandbox.internal.smartcolumbusos.com \
+            -dname "CN=presto.smrt-831.sandbox.internal.smartcolumbusos.com,OU=scos,O=smartcolumbus,L=Columbus,S=Ohio,C=US" \
+            -keyalg RSA \
+            -keystore /etc/presto/presto.jks \
+            -validity 365000
+        volumeMounts:
+        - name: config
+          mountPath: /etc/presto
       containers:
       - name: presto-coordinator
         image: {{ .Values.presto.deploy.container.image }}:{{ .Values.presto.deploy.container.tag }}
@@ -40,6 +64,9 @@ spec:
         - mountPath: /presto/etc/config.properties
           name: coordinator-config
           subPath: config.properties
+        - mountPath: /presto/etc/password-authenticator.properties
+          name: coordinator-config
+          subPath: password-authenticator.properties
         - mountPath: /presto/etc/log.properties
           name: presto-configs
           subPath: log.properties
@@ -49,6 +76,8 @@ spec:
         - mountPath: /etc/hadoop/conf/core-site.xml
           name: core-site
           subPath: core-site.xml
+        - name: config
+          mountPath: /etc/presto
         ports:
         - name: http-coord
           containerPort: {{ .Values.presto.service.port }}
@@ -60,6 +89,8 @@ spec:
           httpGet:
             path: /v1/cluster
             port: http-coord
+        resources:
+{{ toYaml .Values.presto.deploy.container.resources | indent 10 }}
       volumes:
       - name: presto-configs
         configMap:
@@ -70,3 +101,5 @@ spec:
       - name: core-site
         configMap:
           name: {{ template "kdp.name" . }}-core-site
+      - name: config
+        emptyDir: {}

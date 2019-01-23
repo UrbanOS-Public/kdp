@@ -18,6 +18,10 @@ spec:
 {{ toYaml .Values.presto.deploy.updateStrategy | trim | indent 4 }}
   template:
     metadata:
+      annotations:
+        checksum/worker-configmap: {{ include (print $.Template.BasePath "/presto/worker-config.yaml") . | sha256sum }}
+        checksum/common-configmap: {{ include (print $.Template.BasePath "/presto/presto-configs.yaml") . | sha256sum }}
+        checksum/core-site-configmap: {{ include (print $.Template.BasePath "/shared-configs/core-site.yaml") . | sha256sum }}
       labels:
         component: presto
         role: worker
@@ -67,6 +71,8 @@ spec:
               - /presto/etc/health_check.sh
           initialDelaySeconds: 5
           periodSeconds: 10
+        resources:
+{{ toYaml .Values.presto.deploy.container.resources | indent 10 }}
       volumes:
       - name: presto-configs
         configMap:

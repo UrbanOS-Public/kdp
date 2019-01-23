@@ -6,10 +6,11 @@ presto:
   logLevel: INFO
   environment: production
   query:
-    maxMemory: 4GB
-    maxMemoryPerNode: 1GB
+    maxMemory: 1GB
+    maxMemoryPerNode: 0.5GB
+    maxTotalMemoryPerNode: 0.6GB
   jvm:
-    maxHeapSize: 8G
+    maxHeapSize: 1536M
     gcMethod:
       type: UseG1GC
       g1:
@@ -17,9 +18,16 @@ presto:
   deploy:
     replicas: 1
     container:
-      image: jeffgrunewald/presto
-      tag: '1.1'
+      image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/presto
+      tag: latest
       pullPolicy: IfNotPresent
+      resources:
+        limits:
+          memory: 2Gi
+          cpu: 2
+        requests:
+          memory: 2Gi
+          cpu: 1
     updateStrategy:
       type: RollingUpdate
       rollingUpdate:
@@ -27,17 +35,19 @@ presto:
         maxUnavailable: 1
   ingress:
     enable: true
+    annotations:
+      alb.ingress.kubernetes.io/healthcheck-path: /v1/cluster
 
 metastore:
   service:
     type: ClusterIP
     port: 9083
-  warehouseDir: warehouse
+  warehouseDir: hive-s3
   deploy:
     replicas: 1
     container:
-      image: jeffgrunewald/metastore
-      tag: '1.0'
+      image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/metastore
+      tag: latest
       pullPolicy: IfNotPresent
     updateStrategy:
       type: RollingUpdate
@@ -105,8 +115,8 @@ hive:
   deploy:
     replicas: 1
     container:
-      image: jeffgrunewald/hive
-      tag: '1.0'
+      image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/hive
+      tag: latest
       pullPolicy:
     updateStrategy:
       type: RollingUpdate
@@ -115,8 +125,8 @@ hive:
         maxUnavailable: 1
   spark:
     container:
-      image: jeffgrunewald/spark-2.4-base
-      tag: '1.1'
+      image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/spark
+      tag: latest
       pullPolicy: IfNotPresent
     master:
       url: https://kubernetes.default.svc.cluster.local:443
@@ -137,5 +147,3 @@ global:
   environment: sandbox
   objectStore:
     bucketName: kdp-cloud-storage
-    accessKey: secret-key
-    accessSecret: super-secret

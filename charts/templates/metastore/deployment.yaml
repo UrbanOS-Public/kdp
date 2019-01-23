@@ -15,6 +15,9 @@ spec:
 {{ toYaml .Values.metastore.deploy.updateStrategy | trim | indent 4 }}
   template:
     metadata:
+      annotations:
+        checksum/core-site-configmap: {{ include (print $.Template.BasePath "/shared-configs/core-site.yaml") . | sha256sum }}
+        checksum/metastore-site-configmap: {{ include (print $.Template.BasePath "/metastore/metastore-site.yaml") . | sha256sum }}
       labels:
         component: metastore
 {{ include "kdp.labels" . | indent 8 }}  

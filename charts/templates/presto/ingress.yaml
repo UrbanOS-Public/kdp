@@ -19,7 +19,7 @@ metadata:
 spec:
   backend:
     serviceName: {{ $serviceName }}
-    servicePort: {{ $servicePort }}
+    servicePort: {{ .Values.presto.service.port }}
   rules:
 {{- range .Values.presto.ingress.hosts }}
 {{- $url := splitList "/" . }}
