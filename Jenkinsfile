@@ -21,7 +21,7 @@ node ('infrastructure') {
 
         imageTag = "${env.GIT_COMMIT_HASH}"
         images = ["hive", "metastore", "presto", "spark"]
-
+/*
         doStageUnlessRelease('Build') {
             images.each {
                 dir("images/${it}") {
@@ -33,7 +33,7 @@ node ('infrastructure') {
                 }
             }
         }
-
+*/
         doStageUnlessRelease('Deploy to Dev') {
             deployTo(environment: 'dev', tag: imageTag, internal: true)
         }
@@ -44,13 +44,14 @@ node ('infrastructure') {
             deployTo(environment: 'staging', tag: imageTag, internal: true)
 
             scos.applyAndPushGitHubTag(promotionTag)
-
+/*
             scos.withDockerRegistry {
                 images.each {
                     image = scos.pullImageFromDockerRegistry("scos/${it}", imageTag)
                     image.push(promotionTag)
                 }
             }
+*/
         }
 
         doStageIfRelease('Deploy to Production') {
@@ -60,7 +61,7 @@ node ('infrastructure') {
             deployTo(environment: 'prod', tag: imageTag, internal: false)
 
             scos.applyAndPushGitHubTag(promotionTag)
-
+/*
             scos.withDockerRegistry {
                 images.each {
                     image = scos.pullImageFromDockerRegistry("scos/${it}", imageTag)
@@ -68,6 +69,7 @@ node ('infrastructure') {
                     image.push(promotionTag)
                 }
             }
+*/
         }
     }
 }

@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: presto-worker
-        image: {{ .Values.presto.deploy.container.image }}:{{ .Values.presto.deploy.container.port }}
+        image: {{ .Values.presto.deploy.container.image }}:{{ .Values.presto.deploy.container.tag }}
         imagePullPolicy: {{ .Values.presto.deploy.container.pullPolicy }}
         command:
         - "launcher"
@@ -68,7 +68,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
         resources:
-{{ include "kdp.resources" . | trim | indent 12 }}
+{{ include "kdp.resources" . | trim | indent 10 }}
       volumes:
       - name: presto-configs
         configMap:
