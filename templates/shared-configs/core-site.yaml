@@ -16,6 +16,13 @@ data:
         <value>s3a://{{ .Values.global.objectStore.bucketName }}</value>
         <final>true</final>
       </property>
+
+{{- if .Values.minio.enable -}}
+      <property>
+        <name>fs.s3a.endpoint</name>
+        <value>http://{{ template "kdp.minio.fullname" . }}:{{ .Values.minio.service.port }}</value>
+      </property>
+{{- end }}
     
       <property>
         <name>fs.s3a.access.key</name>

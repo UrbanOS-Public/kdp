@@ -67,8 +67,6 @@ spec:
               - /presto/etc/health_check.sh
           initialDelaySeconds: 5
           periodSeconds: 10
-        resources:
-{{ include "kdp.resources" . | trim | indent 10 }}
       volumes:
       - name: presto-configs
         configMap:

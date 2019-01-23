@@ -60,8 +60,6 @@ spec:
           httpGet:
             path: /v1/cluster
             port: http-coord
-        resources:
-{{ include "kdp.resources" . | trim | indent 10 }}
       volumes:
       - name: presto-configs
         configMap:

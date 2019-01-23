@@ -92,6 +92,11 @@ minio:
   ingress:
     enable: true
 
+hook:
+  container:
+    image: alpine
+    tag: '3.8'
+
 hive:
   enable: true
   service:
@@ -134,7 +139,3 @@ global:
     bucketName: kdp-cloud-storage
     accessKey: secret-key
     accessSecret: super-secret
-
-resourceLimits:
-  cpu: 100m
-  memory: 256Mi

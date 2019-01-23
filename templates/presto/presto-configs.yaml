@@ -31,3 +31,7 @@ data:
     hive.s3.aws-access-key={{ .Values.global.objectStore.accessKey }}
     hive.s3.aws-secret-key={{ .Values.global.objectStore.accessSecret }}
     hive.s3.path-style-access=true
+{{- if .Values.minio.enable }}
+    hive.s3.endpoint=http://{{ template "kdp.minio.fullname" . }}:{{ .Values.minio.service.port }}
+    hive.s3.ssl.enabled=false
+{{- end }}
