@@ -10,6 +10,15 @@ WITH (
   format = 'JSON'
 );
 
+CREATE TABLE pauls_life3 (
+  request_time timestamp,
+  style varchar,
+  stylist varchar
+)
+WITH (
+  format = 'JSON'
+);
+
 #Partitioned Data
 CREATE TABLE page_views (
   user_id bigint,
@@ -147,3 +156,10 @@ with (
     format = 'JSON',
     external_location='s3a://streaming-data-aggregator-skeleton-sandbox/hive-s3/cota-vehicle-positions/'
 );
+
+
+## LDAP stuff
+## TODO - make the 8443 stuff less shitty
+## TODO - terraformify the NLB stuff
+## TODO - make IDAM server disable SSSD
+authconfig --disablesssd --update

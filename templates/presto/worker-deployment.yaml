@@ -20,6 +20,7 @@ spec:
     metadata:
       annotations:
         checksum/common-configmap: {{ include (print $.Template.BasePath "/presto/presto-configs.yaml") . | sha256sum }}
+        checksum/core-site-configmap: {{ include (print $.Template.BasePath "/shared-configs/core-site.yaml") . | sha256sum }}
       labels:
         component: presto
         role: worker

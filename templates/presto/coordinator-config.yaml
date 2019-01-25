@@ -14,8 +14,17 @@ data:
 {{- else }}
     node-scheduler.include-coordinator=true
 {{- end }}
+    http-server.https.enabled=true
+    http-server.https.port=8443
+    http-server.https.keystore.path=/etc/presto/presto.jks
+    http-server.https.keystore.key=password123
     http-server.http.port={{ .Values.presto.service.port }}
     query.max-memory={{ .Values.presto.query.maxMemory }}
     query.max-memory-per-node={{ .Values.presto.query.maxMemoryPerNode }}
     discovery-server.enabled=true
     discovery.uri=http://{{ template "kdp.presto.fullname" . }}:{{ .Values.presto.service.port }}
+    http-server.authentication.type=PASSWORD
+  password-authenticator.properties: |
+    password-authenticator.name=ldap
+    ldap.url=ldaps://iam-master.alm.sandbox.internal.smartcolumbusos.com:636
+    ldap.user-bind-pattern=uid=${USER},cn=users,cn=accounts,DC=sandbox,DC=internal,DC=smartcolumbusos,DC=com
