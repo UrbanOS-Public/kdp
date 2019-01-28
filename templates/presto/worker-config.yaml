@@ -13,6 +13,7 @@ data:
     http-server.http.port={{ .Values.presto.service.port }}
     query.max-memory={{ .Values.presto.query.maxMemory }}
     query.max-memory-per-node={{ .Values.presto.query.maxMemoryPerNode }}
+    query.max-total-memory-per-node={{ .Values.presto.query.maxTotalMemoryPerNode }}
     discovery.uri=http://{{ template "kdp.presto.fullname" . }}:{{ .Values.presto.service.port }}
 
   health_check.sh: |

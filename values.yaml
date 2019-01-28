@@ -3,13 +3,14 @@ presto:
   service:
     type: NodePort
     port: 8080
-  logLevel: INFO
+  logLevel: DEBUG
   environment: production
   query:
     maxMemory: 1GB
-    maxMemoryPerNode: 1GB
+    maxMemoryPerNode: 0.5GB
+    maxTotalMemoryPerNode: 0.6GB
   jvm:
-    maxHeapSize: 8G
+    maxHeapSize: 1G
     gcMethod:
       type: UseG1GC
       g1:
@@ -20,6 +21,13 @@ presto:
       image: jeffgrunewald/presto
       tag: '1.1'
       pullPolicy: IfNotPresent
+      resources:
+        limits:
+          memory: 1.5Gi
+          cpu: 2
+        requests:
+          memory: 1.5Gi
+          cpu: 1
     updateStrategy:
       type: RollingUpdate
       rollingUpdate:
@@ -136,6 +144,4 @@ hive:
 global:
   environment: sandbox
   objectStore:
-    bucketName: kdp-cloud-storage
-    accessKey: secret-key
-    accessSecret: super-secret
+    bucketName: streaming-data-aggregator-skeleton-sandbox

@@ -7,7 +7,8 @@ CREATE TABLE pauls_haircut (
   stylist varchar
 )
 WITH (
-  format = 'JSON'
+  format = 'JSON',
+  external_location='s3a://streaming-data-aggregator-skeleton-sandbox/hive-s3/pauls_haircut/'
 );
 
 CREATE TABLE pauls_life3 (
