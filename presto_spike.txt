@@ -45,7 +45,7 @@ CALL system.create_empty_partition(
 
 
 # Nested Data
-CREATE TABLE misc_1 (
+CREATE TABLE misc_2 (
   name varchar,
   data map<int, int>
 )
@@ -137,7 +137,7 @@ PRESTO_PAGER= presto --catalog hive --schema default --execute 'select * from bo
 hive.properties:
 hive.security=sql-standard
 
-create table cota_vehicle_positions (
+create table cota_vehicle_positions_2 (
     id varchar,
     is_deleted boolean,
     vehicle row(

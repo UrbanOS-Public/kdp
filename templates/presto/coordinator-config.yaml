@@ -22,6 +22,8 @@ data:
     query.max-memory={{ .Values.presto.query.maxMemory }}
     query.max-memory-per-node={{ .Values.presto.query.maxMemoryPerNode }}
     query.max-total-memory-per-node={{ .Values.presto.query.maxTotalMemoryPerNode }}
+    memory.heap-headroom-per-node=0.75GB
+    task.concurrency=32
     discovery-server.enabled=true
     discovery.uri=http://{{ template "kdp.presto.fullname" . }}:{{ .Values.presto.service.port }}
     http-server.authentication.type=PASSWORD

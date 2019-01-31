@@ -10,7 +10,7 @@ presto:
     maxMemoryPerNode: 0.5GB
     maxTotalMemoryPerNode: 0.6GB
   jvm:
-    maxHeapSize: 1G
+    maxHeapSize: 1536M
     gcMethod:
       type: UseG1GC
       g1:
@@ -23,10 +23,10 @@ presto:
       pullPolicy: IfNotPresent
       resources:
         limits:
-          memory: 1.5Gi
+          memory: 2Gi
           cpu: 2
         requests:
-          memory: 1.5Gi
+          memory: 2Gi
           cpu: 1
     updateStrategy:
       type: RollingUpdate
@@ -35,6 +35,9 @@ presto:
         maxUnavailable: 1
   ingress:
     enable: true
+    annotations:
+      alb.ingress.kubernetes.io/backend-protocol: 'HTTPS'
+      alb.ingress.kubernetes.io/healthcheck-path: /v1/cluster
 
 metastore:
   service:
