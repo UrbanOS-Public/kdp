@@ -9,6 +9,7 @@ presto:
     maxMemory: 1GB
     maxMemoryPerNode: 0.5GB
     maxTotalMemoryPerNode: 0.6GB
+    heapHeadroomPerNode: 0.75GB
   jvm:
     maxHeapSize: 1536M
     gcMethod:
