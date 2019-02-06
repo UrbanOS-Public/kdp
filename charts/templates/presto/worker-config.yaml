@@ -13,8 +13,9 @@ data:
     http-server.http.port={{ .Values.presto.service.port }}
     query.max-memory={{ .Values.presto.query.maxMemory }}
     query.max-memory-per-node={{ .Values.presto.query.maxMemoryPerNode }}
+    query.max-total-memory-per-node={{ .Values.presto.query.maxTotalMemoryPerNode }}
     discovery.uri=http://{{ template "kdp.presto.fullname" . }}:{{ .Values.presto.service.port }}
-
+    memory.heap-headroom-per-node={{ .Values.presto.query.heapHeadroomPerNode }}
   health_check.sh: |
     #!/bin/bash
     curl --silent {{ template "kdp.presto.fullname" . }}:{{ .Values.presto.service.port }}/v1/node | tr "," "\n" | grep --silent $(hostname -i)

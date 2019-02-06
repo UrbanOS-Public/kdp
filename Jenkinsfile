@@ -1,5 +1,5 @@
 library(
-    identifier: 'pipeline-lib@4.3.6',
+    identifier: 'pipeline-lib@4.5.0',
     retriever: modernSCM([$class: 'GitSCMSource',
                           remote: 'https://github.com/SmartColumbusOS/pipeline-lib',
                           credentialsId: 'jenkins-github-user'])
@@ -21,7 +21,7 @@ node ('infrastructure') {
 
         imageTag = "${env.GIT_COMMIT_HASH}"
         images = ["hive", "metastore", "presto", "spark"]
-/*
+
         doStageUnlessRelease('Build') {
             images.each {
                 dir("images/${it}") {
@@ -33,7 +33,7 @@ node ('infrastructure') {
                 }
             }
         }
-*/
+
         doStageUnlessRelease('Deploy to Dev') {
             deployTo(environment: 'dev', tag: imageTag, internal: true)
         }
@@ -44,14 +44,13 @@ node ('infrastructure') {
             deployTo(environment: 'staging', tag: imageTag, internal: true)
 
             scos.applyAndPushGitHubTag(promotionTag)
-/*
+
             scos.withDockerRegistry {
                 images.each {
                     image = scos.pullImageFromDockerRegistry("scos/${it}", imageTag)
                     image.push(promotionTag)
                 }
             }
-*/
         }
 
         doStageIfRelease('Deploy to Production') {
@@ -61,7 +60,7 @@ node ('infrastructure') {
             deployTo(environment: 'prod', tag: imageTag, internal: false)
 
             scos.applyAndPushGitHubTag(promotionTag)
-/*
+
             scos.withDockerRegistry {
                 images.each {
                     image = scos.pullImageFromDockerRegistry("scos/${it}", imageTag)
@@ -69,21 +68,22 @@ node ('infrastructure') {
                     image.push(promotionTag)
                 }
             }
-*/
         }
     }
 }
 
 def deployTo(params = [:]) {
-    def extraVars = [
-        'image_tag': params.get('tag'),
-        'is_internal': params.get('internal')
-    ]
-    def environment = params.get('environment')
-    if (environment == null) throw new IllegalArgumentException("environment must be specified")
+    dir('terraform') {
+        def extraVars = [
+            'image_tag': params.get('tag'),
+            'is_internal': params.get('internal')
+        ]
+        def environment = params.get('environment')
+        if (environment == null) throw new IllegalArgumentException("environment must be specified")
 
-    def terraform = scos.terraform(environment)
-    sh("terraform init && terraform workspace new ${environment}")
-    terraform.plan(terraform.defaultVarFile, extraVars)
-    terraform.apply()
+        def terraform = scos.terraform(environment)
+        terraform.init()
+        terraform.plan(terraform.defaultVarFile, extraVars)
+        terraform.apply()
+    }
 }
