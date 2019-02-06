@@ -166,11 +166,13 @@ global:
   objectStore:
     bucketName: ${aws_s3_bucket.presto_hive_storage.bucket}
 metastore:
-  container:
-    tag: ${var.image_tag}
+  deploy:
+    container:
+      tag: ${var.image_tag}
 presto:
-  container:
-    tag: ${var.image_tag}
+  deploy:
+    container:
+      tag: ${var.image_tag}
   ingress:
     hosts:
     - "presto.${data.terraform_remote_state.env_remote_state.dns_zone_name}/*"
