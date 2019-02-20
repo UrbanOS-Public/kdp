@@ -12,7 +12,7 @@ RUN set -ex && \
     apk upgrade --no-cache && \
     apk add --no-cache bash tini libc6-compat && \
     rm /bin/sh && \
-    mkdir /opt && \
+    mkdir -p /opt && \
     ln -sv /bin/bash /bin/sh
 
 SHELL ["/bin/bash", "-c"]
