@@ -73,24 +73,25 @@ resource "aws_security_group" "metastore_allow" {
 }
 
 resource "aws_db_instance" "metastore_database" {
-  identifier              = "${terraform.workspace}-hive-metastore"
-  name                    = "metastore"
-  instance_class          = "db.t2.small"
-  vpc_security_group_ids  = ["${aws_security_group.metastore_allow.id}"]
-  db_subnet_group_name    = "${aws_db_subnet_group.metastore_subnet_group.name}"
-  engine                  = "postgres"
-  engine_version          = "10.4"
-  allocated_storage       = 100 # The allocated storage in gibibytes.
-  storage_type            = "gp2"
-  username                = "metastore"
-  password                = "${random_string.metastore_password.result}"
-  multi_az                = true
-  backup_window           = "04:54-05:24"
-  backup_retention_period = 7
-  storage_encrypted       = true
-  kms_key_id              = "${aws_kms_key.metastore_key.arn}"
-  apply_immediately       = false
-  skip_final_snapshot     = false
+  identifier                 = "${terraform.workspace}-hive-metastore"
+  name                       = "metastore"
+  instance_class             = "db.t2.small"
+  vpc_security_group_ids     = ["${aws_security_group.metastore_allow.id}"]
+  db_subnet_group_name       = "${aws_db_subnet_group.metastore_subnet_group.name}"
+  engine                     = "postgres"
+  engine_version             = "10.6"
+  auto_minor_version_upgrade = false
+  allocated_storage          = 100 # The allocated storage in gibibytes.
+  storage_type               = "gp2"
+  username                   = "metastore"
+  password                   = "${random_string.metastore_password.result}"
+  multi_az                   = true
+  backup_window              = "04:54-05:24"
+  backup_retention_period    = 7
+  storage_encrypted          = true
+  kms_key_id                 = "${aws_kms_key.metastore_key.arn}"
+  apply_immediately          = false
+  skip_final_snapshot        = false
 }
 
 resource "aws_s3_bucket" "presto_hive_storage" {
