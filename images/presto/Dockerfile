@@ -46,8 +46,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		python="${PYTHON2_DEBIAN_VERSION}" \
 	&& rm -rf /var/lib/apt/lists/* \
     && cd /usr/local/bin \
-	&& rm -rf idle pydoc python python-config 
+	&& rm -rf idle pydoc python python-config
 
 USER $PRESTO_USER
 
 CMD ["launcher", "run"]
+
+COPY config.properties node.properties log.properties jvm.config core-site.xml ${PRESTO_CONF_DIR}/
+COPY catalog ${PRESTO_CONF_DIR}/catalog
