@@ -51,6 +51,3 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 USER $PRESTO_USER
 
 CMD ["launcher", "run"]
-
-COPY config.properties node.properties log.properties jvm.config core-site.xml ${PRESTO_CONF_DIR}/
-COPY catalog ${PRESTO_CONF_DIR}/catalog

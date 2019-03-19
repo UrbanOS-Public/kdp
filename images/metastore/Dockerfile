@@ -34,6 +34,3 @@ RUN wget ${mvn_url}/org/postgresql/postgresql/${pg_driver_version}/postgresql-${
     wget ${mvn_url}/joda-time/joda-time/${joda_version}/joda-time-${joda_version}.jar -P ${METASTORE_HOME}/lib/
 
 WORKDIR $METASTORE_HOME
-
-COPY metastore-site.xml ${METASTORE_HOME}/conf/metastore-site.xml
-COPY core-site.xml ${HADOOP_HOME}/etc/hadoop/core-site.xml
