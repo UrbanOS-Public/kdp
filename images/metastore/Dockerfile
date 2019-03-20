@@ -11,7 +11,6 @@ ENV METASTORE_HOME=/opt/hive-metastore \
     HADOOP_HOME=/opt/hadoop
 
 RUN set -ex && \
-    apk upgrade --no-cache && \
     apk add --no-cache bash tini libc6-compat linux-pam && \
     mkdir -p /opt && \
     rm /bin/sh && \
