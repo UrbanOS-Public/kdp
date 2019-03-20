@@ -20,7 +20,7 @@ node ('infrastructure') {
         scos.doCheckoutStage()
 
         imageTag = "${env.GIT_COMMIT_HASH}"
-        images = ["hive", "metastore", "presto", "spark"]
+        images = ["hive", "metastore", "presto", "spark", "presto-testo", "metastore-testo", "postgres-testo", "minio-testo"]
 
         doStageUnlessRelease('Build') {
             images.each {
