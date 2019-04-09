@@ -20,7 +20,7 @@ spec:
         checksum/metastore-site-configmap: {{ include (print $.Template.BasePath "/metastore/metastore-site.yaml") . | sha256sum }}
       labels:
         component: metastore
-{{ include "kdp.labels" . | indent 8 }}  
+{{ include "kdp.labels" . | indent 8 }}
     spec:
       initContainers:
       - name: init-schema
@@ -51,6 +51,8 @@ spec:
         - mountPath: /opt/hadoop/etc/hadoop/core-site.xml
           name: core-site
           subPath: core-site.xml
+        resources:
+{{ toYaml .Values.metastore.deploy.container.resources | indent 10 }}
       volumes:
       - name: metastore-site
         configMap:
