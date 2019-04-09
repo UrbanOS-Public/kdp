@@ -45,6 +45,14 @@ resource "random_string" "metastore_password" {
   special = false
 }
 
+resource "aws_secretsmanager_secret" "presto_metastore_password" {
+  name = "presto_metastore_database_password"
+}
+resource "aws_secretsmanager_secret_version" "presto_metastore_password_version" {
+  secret_id     = "${aws_secretsmanager_secret.presto_metastore_password.id}"
+  secret_string = "${aws_db_instance.metastore_database.password}"
+}
+
 resource "aws_db_subnet_group" "metastore_subnet_group" {
   name        = "metastore database ${terraform.workspace} subnet group"
   description = "DB Subnet Group"
@@ -75,7 +83,7 @@ resource "aws_security_group" "metastore_allow" {
 resource "aws_db_instance" "metastore_database" {
   identifier                 = "${terraform.workspace}-hive-metastore"
   name                       = "metastore"
-  instance_class             = "db.t2.small"
+  instance_class             = "${var.metastore_instance_class}"
   vpc_security_group_ids     = ["${aws_security_group.metastore_allow.id}"]
   db_subnet_group_name       = "${aws_db_subnet_group.metastore_subnet_group.name}"
   engine                     = "postgres"
@@ -251,4 +259,9 @@ variable "state_bucket" {
 variable "image_tag" {
   description = "The tag to deploy the component images"
   default     = "latest"
+}
+
+variable "metastore_instance_class" {
+  description = "The size of the hive metastore rds instance"
+  default     = "db.t3.small"
 }

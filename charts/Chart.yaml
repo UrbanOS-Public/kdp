@@ -8,7 +8,6 @@ keywords:
 - hive-metastore
 - cloud-object-store
 - minio
-- hive
 sources:
 - https://github.com/prestodb/presto
 - https://github.com/apache/hive

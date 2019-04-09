@@ -17,7 +17,7 @@ presto:
       g1:
         heapRegionSize: 32M
   deploy:
-    replicas: 1
+    replicas: 2
     container:
       image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/presto
       tag: latest
@@ -107,42 +107,6 @@ hook:
   container:
     image: alpine
     tag: '3.8'
-
-hive:
-  enable: true
-  service:
-    type: NodePort
-    port: 10000
-  deploy:
-    replicas: 1
-    container:
-      image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/hive
-      tag: latest
-      pullPolicy:
-    updateStrategy:
-      type: RollingUpdate
-      rollingUpdate:
-        maxSurge: 1
-        maxUnavailable: 1
-  spark:
-    container:
-      image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/spark
-      tag: latest
-      pullPolicy: IfNotPresent
-    master:
-      url: https://kubernetes.default.svc.cluster.local:443
-    executor:
-      instances: 2
-      memory: 512m
-      labels:
-      - key: hadoop-less
-        value: 'true'
-    driver:
-      labels:
-      - key: hadoop-less
-        value: 'true'
-    appName: kdp
-    deployMode: cluster
 
 global:
   environment: sandbox
