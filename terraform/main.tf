@@ -184,7 +184,7 @@ presto:
       tag: ${var.image_tag}
   ingress:
     hosts:
-    - "presto.${data.terraform_remote_state.env_remote_state.dns_zone_name}/*"
+    - "presto.${data.terraform_remote_state.env_remote_state.internal_dns_zone_name}/*"
     annotations:
       alb.ingress.kubernetes.io/healthcheck-path: /v1/cluster
     serviceName: redirect
