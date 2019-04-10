@@ -35,13 +35,13 @@ node ('infrastructure') {
         }
 
         doStageUnlessRelease('Deploy to Dev') {
-            deployTo(environment: 'dev', tag: imageTag, internal: true)
+            deployTo(environment: 'dev', tag: imageTag)
         }
 
         doStageIfPromoted('Deploy to Staging')  {
             def environment = 'staging'
 
-            deployTo(environment: environment, tag: imageTag, internal: true)
+            deployTo(environment: environment, tag: imageTag)
 
             scos.applyAndPushGitHubTag(environment)
 
@@ -57,7 +57,7 @@ node ('infrastructure') {
             def releaseTag = env.BRANCH_NAME
             def promotionTag = 'prod'
 
-            deployTo(environment: 'prod', tag: imageTag, internal: false)
+            deployTo(environment: 'prod', tag: imageTag)
 
             scos.applyAndPushGitHubTag(promotionTag)
 
@@ -75,8 +75,7 @@ node ('infrastructure') {
 def deployTo(params = [:]) {
     dir('terraform') {
         def extraVars = [
-            'image_tag': params.get('tag'),
-            'is_internal': params.get('internal')
+            'image_tag': params.get('tag')
         ]
         def environment = params.get('environment')
         if (environment == null) throw new IllegalArgumentException("environment must be specified")

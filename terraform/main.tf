@@ -229,7 +229,7 @@ EOF
 
 variable "is_internal" {
   description = "Should the ALBs be internal facing"
-  default     = false
+  default     = true
 }
 
 variable "alm_region" {
