@@ -8,8 +8,8 @@ ARG apache_url=http://archive.apache.org/dist
 ARG mvn_url=http://central.maven.org/maven2
 
 ENV METASTORE_HOME=/opt/hive-metastore \
-    HADOOP_HOME=/opt/hadoop
-
+    HADOOP_HOME=/opt/hadoop \
+    HADOOP_OPTS="-Xms768m -Xmx768m -XX:NewSize=300m"
 RUN set -ex && \
     apk add --no-cache bash tini libc6-compat linux-pam && \
     mkdir -p /opt && \
