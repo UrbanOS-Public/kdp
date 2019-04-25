@@ -181,7 +181,7 @@ metastore:
   deploy:
     container:
       tag: ${var.image_tag}
-  allowDropTable: ${var.allow_drop_table}
+  allowDropTable: ${var.allow_drop_table ? "true": "false"}
 presto: 
   deploy:
     container:
