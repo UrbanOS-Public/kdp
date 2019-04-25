@@ -28,6 +28,11 @@ data:
     hive.metastore.uri=thrift://{{ template "kdp.metastore.fullname" . }}:{{ .Values.metastore.service.port }}
     hive.metastore.username={{ .Values.postgres.db.user }}
     hive.config.resources=/etc/hadoop/conf/core-site.xml
+    hive.allow-drop-table={{ .Values.metastore.allowDropTable }}
+    hive.allow-rename-table={{ .Values.metastore.allowDropTable }}
+    hive.allow-drop-column={{ .Values.metastore.allowDropTable }}
+    hive.allow-rename-column={{ .Values.metastore.allowDropTable }}
+    hive.allow-add-column={{ .Values.metastore.allowDropTable }}
 {{- if and .Values.global.objectStore.accessKey .Values.global.objectStore.accessSecret }}
     hive.s3.aws-access-key={{ .Values.global.objectStore.accessKey }}
     hive.s3.aws-secret-key={{ .Values.global.objectStore.accessSecret }}

@@ -40,6 +40,7 @@ presto:
       alb.ingress.kubernetes.io/healthcheck-path: /v1/cluster
 
 metastore:
+  allowDropTable: false
   service:
     type: ClusterIP
     port: 9083
@@ -119,3 +120,4 @@ global:
   environment: sandbox
   objectStore:
     bucketName: kdp-cloud-storage
+
