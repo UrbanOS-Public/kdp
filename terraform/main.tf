@@ -32,22 +32,23 @@ resource "local_file" "kubeconfig" {
 }
 
 resource "aws_kms_key" "metastore_key" {
-  description             = "metastore database encryption key for ${terraform.workspace}"
+  description = "metastore database encryption key for ${terraform.workspace}"
 }
 
 resource "aws_kms_alias" "metastore_key_alias" {
-  name_prefix           = "alias/hive"
-  target_key_id         = "${aws_kms_key.metastore_key.key_id}"
+  name_prefix   = "alias/hive"
+  target_key_id = "${aws_kms_key.metastore_key.key_id}"
 }
 
 resource "random_string" "metastore_password" {
-  length = 40
+  length  = 40
   special = false
 }
 
 resource "aws_secretsmanager_secret" "presto_metastore_password" {
   name = "presto_metastore_database_password"
 }
+
 resource "aws_secretsmanager_secret_version" "presto_metastore_password_version" {
   secret_id     = "${aws_secretsmanager_secret.presto_metastore_password.id}"
   secret_string = "${aws_db_instance.metastore_database.password}"
@@ -89,7 +90,7 @@ resource "aws_db_instance" "metastore_database" {
   engine                     = "postgres"
   engine_version             = "10.6"
   auto_minor_version_upgrade = false
-  allocated_storage          = 100 # The allocated storage in gibibytes.
+  allocated_storage          = 100                                                  # The allocated storage in gibibytes.
   storage_type               = "gp2"
   username                   = "metastore"
   password                   = "${random_string.metastore_password.result}"
@@ -113,7 +114,7 @@ resource "aws_s3_bucket" "presto_hive_storage" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm     = "AES256"
+        sse_algorithm = "AES256"
       }
     }
   }
@@ -121,7 +122,8 @@ resource "aws_s3_bucket" "presto_hive_storage" {
 
 resource "aws_s3_bucket_policy" "presto_hive_storage" {
   bucket = "${aws_s3_bucket.presto_hive_storage.id}"
-  policy =<<POLICY
+
+  policy = <<POLICY
 {
    "Version": "2012-10-17",
    "Statement": [
@@ -159,6 +161,7 @@ POLICY
 
 resource "local_file" "helm_vars" {
   filename = "${path.module}/outputs/${terraform.workspace}.yaml"
+
   content = <<EOF
 global:
   environment: ${terraform.workspace}
@@ -178,7 +181,8 @@ metastore:
   deploy:
     container:
       tag: ${var.image_tag}
-presto:
+  allowDropTable: ${var.allow_drop_table}
+presto: 
   deploy:
     container:
       tag: ${var.image_tag}
@@ -264,4 +268,9 @@ variable "image_tag" {
 variable "metastore_instance_class" {
   description = "The size of the hive metastore rds instance"
   default     = "db.t3.small"
+}
+
+variable "allow_drop_table" {
+  description = "Configures presto to allow drop, rename table and columns"
+  default     = false
 }
