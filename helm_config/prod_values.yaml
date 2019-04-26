@@ -1,0 +1,11 @@
+presto:
+  jvm:
+    maxHeapSize: 4096M
+  deploy:
+      resources:
+        limits:
+          memory: 6Gi
+          cpu: 4
+        requests:
+          memory: 6Gi
+          cpu: 2

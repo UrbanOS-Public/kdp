@@ -182,7 +182,7 @@ metastore:
     container:
       tag: ${var.image_tag}
   allowDropTable: ${var.allow_drop_table ? "true": "false"}
-presto: 
+presto:
   deploy:
     container:
       tag: ${var.image_tag}
@@ -220,7 +220,8 @@ export KUBECONFIG=${local_file.kubeconfig.filename}
 export AWS_DEFAULT_REGION=us-east-2
 
 helm upgrade --install kdp . --namespace kdp \
-    --values ${local_file.helm_vars.filename}
+    -f ${local_file.helm_vars.filename} \
+    -f ../helm_config/${var.environment}_values.yaml
 EOF
   }
 
@@ -263,6 +264,10 @@ variable "state_bucket" {
 variable "image_tag" {
   description = "The tag to deploy the component images"
   default     = "latest"
+}
+
+variable "environment" {
+  description = "The environment to deploy kdp to"
 }
 
 variable "metastore_instance_class" {

@@ -74,11 +74,12 @@ node ('infrastructure') {
 
 def deployTo(params = [:]) {
     dir('terraform') {
-        def extraVars = [
-            'image_tag': params.get('tag')
-        ]
         def environment = params.get('environment')
         if (environment == null) throw new IllegalArgumentException("environment must be specified")
+        def extraVars = [
+            'image_tag': params.get('tag'),
+            'environment': environment
+        ]
 
         def terraform = scos.terraform(environment)
         terraform.init()
