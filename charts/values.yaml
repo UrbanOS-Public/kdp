@@ -11,7 +11,7 @@ presto:
     maxTotalMemoryPerNode: 0.6GB
     heapHeadroomPerNode: 0.75GB
   jvm:
-    maxHeapSize: 4096M
+    maxHeapSize: 1536M # look for environment specific values
     gcMethod:
       type: UseG1GC
       g1:
@@ -24,11 +24,11 @@ presto:
       pullPolicy: IfNotPresent
       resources:
         limits:
-          memory: 6Gi
-          cpu: 4
+          memory: 2Gi # look for environment specific values
+          cpu: 2 # look for environment specific values
         requests:
-          memory: 6Gi
-          cpu: 2
+          memory: 2Gi # look for environment specific values
+          cpu: 1 # look for environment specific values
     updateStrategy:
       type: RollingUpdate
       rollingUpdate:
