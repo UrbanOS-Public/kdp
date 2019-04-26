@@ -2,6 +2,7 @@ presto:
   jvm:
     maxHeapSize: 1536M
   deploy:
+    container:
       resources:
         limits:
           memory: 2Gi
