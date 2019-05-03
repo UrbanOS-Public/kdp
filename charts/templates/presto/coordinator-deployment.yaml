@@ -67,7 +67,7 @@ spec:
         resources:
 {{ toYaml .Values.presto.deploy.container.resources | indent 10 }}
       - name: presto-exporter
-        image: yahoojapan/presto-exporter
+        image: yahoojapan/presto-exporter:master
         imagePullPolicy: {{ .Values.presto.deploy.container.pullPolicy }}
         ports:
           - name: metric-port
