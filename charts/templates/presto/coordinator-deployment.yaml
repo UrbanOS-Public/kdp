@@ -53,6 +53,9 @@ spec:
         - mountPath: /etc/hadoop/conf/core-site.xml
           name: core-site
           subPath: core-site.xml
+        - mountPath: /presto/etc/jmx_exporter_config.yaml
+          name: presto-configs
+          subPath: jmx_exporter_config.yaml
         ports:
         - name: http-coord
           containerPort: {{ .Values.presto.service.port }}

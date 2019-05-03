@@ -19,6 +19,10 @@ data:
     -XX:+ExplicitGCInvokesConcurrent
     -XX:+HeapDumpOnOutOfMemoryError
     -XX:+ExitOnOutOfMemoryError
+    -javaagent:/presto/jmx_exporter.jar=8181:/presto/etc/jmx_exporter_config.yaml
+
+  jmx_exporter_config.yaml: |
+    {}
 
   log.properties: |
     com.facebook.presto={{ .Values.presto.logLevel }}

@@ -5,6 +5,9 @@ ARG presto_version="0.215"
 ARG presto_bin="${mirror}/presto-server/${presto_version}/presto-server-${presto_version}.tar.gz"
 ARG presto_cli_bin="${mirror}/presto-cli/${presto_version}/presto-cli-${presto_version}-executable.jar"
 
+ARG jmx_exporter_version="0.11.0"
+ARG jmx_exporter_bin="https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${jmx_exporter_version}/jmx_prometheus_javaagent-${jmx_exporter_version}.jar"
+
 USER root
 
 RUN apt update && \
@@ -38,6 +41,11 @@ RUN mkdir -p $PRESTO_HOME && \
     mv presto-cli-${presto_version}-executable.jar presto && \
     chmod +x presto && \
     chown -R ${PRESTO_USER}:${PRESTO_USER} $PRESTO_HOME
+
+RUN cd $PRESTO_HOME && \
+    wget --quiet $jmx_exporter_bin && \
+    mv jmx_prometheus_javaagent-${jmx_exporter_version}.jar jmx_exporter.jar && \
+    chown ${PRESTO_USER}:${PRESTO_USER} jmx_exporter.jar
 
 # Need to work with python2
 # See: https://github.com/prestodb/presto/issues/4678
