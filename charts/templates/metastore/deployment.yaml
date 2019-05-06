@@ -54,7 +54,7 @@ spec:
           name: core-site
           subPath: core-site.xml
         - mountPath: /opt/hive-metastore/jmx_exporter_config.yaml
-          name: configs
+          name: metastore-configs
           subPath: jmx_exporter_config.yaml
         env:
         - name: JAVA_OPTS
