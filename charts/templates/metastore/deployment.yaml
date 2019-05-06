@@ -57,7 +57,7 @@ spec:
           name: metastore-configs
           subPath: jmx_exporter_config.yaml
         env:
-        - name: JAVA_OPTS
+        - name: HADOOP_OPTS
           value: >
             -server
             -Xmx{{ .Values.presto.jvm.maxHeapSize }}
