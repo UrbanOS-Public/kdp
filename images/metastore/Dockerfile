@@ -7,6 +7,10 @@ ARG pg_driver_version=42.2.5
 ARG apache_url=http://archive.apache.org/dist
 ARG mvn_url=http://central.maven.org/maven2
 
+ARG jmx_exporter_version="0.11.0"
+ARG jmx_exporter_bin="https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${jmx_exporter_version}/jmx_prometheus_javaagent-${jmx_exporter_version}.jar"
+
+
 ENV METASTORE_HOME=/opt/hive-metastore \
     HADOOP_HOME=/opt/hadoop \
     HADOOP_OPTS="-Xms768m -Xmx768m -XX:NewSize=300m"
@@ -31,5 +35,9 @@ RUN wget ${apache_url}/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_ve
 
 RUN wget ${mvn_url}/org/postgresql/postgresql/${pg_driver_version}/postgresql-${pg_driver_version}.jar -P $METASTORE_HOME/lib/ && \
     wget ${mvn_url}/joda-time/joda-time/${joda_version}/joda-time-${joda_version}.jar -P ${METASTORE_HOME}/lib/
+
+RUN cd $METASTORE_HOME && \
+    wget --quiet $jmx_exporter_bin && \
+    mv jmx_prometheus_javaagent-${jmx_exporter_version}.jar jmx_exporter.jar
 
 WORKDIR $METASTORE_HOME

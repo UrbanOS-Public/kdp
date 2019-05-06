@@ -53,9 +53,9 @@ spec:
         - mountPath: /opt/hadoop/etc/hadoop/core-site.xml
           name: core-site
           subPath: core-site.xml
-        - mountPath: /presto/etc/jvm.config
-          name: presto-configs
-          subPath: jvm.config
+        - mountPath: /opt/hive-metastore/jmx_exporter_config.yaml
+          name: configs
+          subPath: jmx_exporter_config.yaml
         env:
         - name: JAVA_OPTS
           value: >
@@ -67,7 +67,7 @@ spec:
             -XX:+ExplicitGCInvokesConcurrent
             -XX:+HeapDumpOnOutOfMemoryError
             -XX:+ExitOnOutOfMemoryError
-            -javaagent:/presto/jmx_exporter.jar=8181:/presto/etc/jmx_exporter_config.yaml
+            -javaagent:/opt/hive-metastore/jmx_exporter.jar=8181:/opt/hive-metastore/jmx_exporter_config.yaml
         resources:
 {{ toYaml .Values.metastore.deploy.container.resources | indent 10 }}
       volumes:
