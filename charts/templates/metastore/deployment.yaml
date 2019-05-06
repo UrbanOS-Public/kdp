@@ -79,4 +79,4 @@ spec:
           name: {{ template "kdp.name" . }}-core-site
       - name: metastore-configs
         configMap:
-          name: {{ template "kdp.presto.fullname" . }}-metastore-configs
+          name: {{ template "kdp.metastore.fullname" . }}-metastore-configs
