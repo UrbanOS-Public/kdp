@@ -7,9 +7,6 @@ metadata:
     component: presto
     role: worker
 {{ include "kdp.labels" . | indent 4 }}
-  annotations:
-    prometheus.io/port:  "8181"
-    prometheus.io/scrape: "true"
 spec:
   selector:
     matchLabels:
@@ -25,6 +22,8 @@ spec:
         checksum/worker-configmap: {{ include (print $.Template.BasePath "/presto/worker-config.yaml") . | sha256sum }}
         checksum/common-configmap: {{ include (print $.Template.BasePath "/presto/presto-configs.yaml") . | sha256sum }}
         checksum/core-site-configmap: {{ include (print $.Template.BasePath "/shared-configs/core-site.yaml") . | sha256sum }}
+        prometheus.io/port: "8181"
+        prometheus.io/scrape: "true"
       labels:
         component: presto
         role: worker
