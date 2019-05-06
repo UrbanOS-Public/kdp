@@ -59,6 +59,8 @@ spec:
         ports:
         - name: http-coord
           containerPort: {{ .Values.presto.service.port }}
+        - name: jmx-exporter
+          containerPort: 8181
         livenessProbe:
           httpGet:
             path: /v1/cluster

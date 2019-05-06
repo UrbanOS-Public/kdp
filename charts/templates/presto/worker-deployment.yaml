@@ -60,6 +60,9 @@ spec:
         - mountPath: /etc/hadoop/conf/core-site.xml
           name: core-site
           subPath: core-site.xml
+        ports:
+        - name: jmx-exporter
+          containerPort: 8181
         livenessProbe:
           exec:
             command:
