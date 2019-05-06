@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: metastore-configs
+  name: {{ template "kdp.presto.fullname" . }}-metastore-configs
   labels:
     component: presto
 {{ include "kdp.labels" . | indent 4 }}
