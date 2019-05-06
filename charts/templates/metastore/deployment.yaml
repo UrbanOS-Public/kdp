@@ -18,6 +18,8 @@ spec:
       annotations:
         checksum/core-site-configmap: {{ include (print $.Template.BasePath "/shared-configs/core-site.yaml") . | sha256sum }}
         checksum/metastore-site-configmap: {{ include (print $.Template.BasePath "/metastore/metastore-site.yaml") . | sha256sum }}
+        prometheus.io/port: "8181"
+        prometheus.io/scrape: "true"
       labels:
         component: metastore
 {{ include "kdp.labels" . | indent 8 }}
@@ -51,6 +53,21 @@ spec:
         - mountPath: /opt/hadoop/etc/hadoop/core-site.xml
           name: core-site
           subPath: core-site.xml
+        - mountPath: /presto/etc/jvm.config
+          name: presto-configs
+          subPath: jvm.config
+        env:
+        - name: JAVA_OPTS
+          value: >
+            -server
+            -Xmx{{ .Values.presto.jvm.maxHeapSize }}
+            -XX:+{{ .Values.presto.jvm.gcMethod.type }}
+            -XX:G1HeapRegionSize={{ .Values.presto.jvm.gcMethod.g1.heapRegionSize }}
+            -XX:+UseGCOverheadLimit
+            -XX:+ExplicitGCInvokesConcurrent
+            -XX:+HeapDumpOnOutOfMemoryError
+            -XX:+ExitOnOutOfMemoryError
+            -javaagent:/presto/jmx_exporter.jar=8181:/presto/etc/jmx_exporter_config.yaml
         resources:
 {{ toYaml .Values.metastore.deploy.container.resources | indent 10 }}
       volumes:
