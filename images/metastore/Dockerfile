@@ -36,8 +36,6 @@ RUN wget ${apache_url}/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_ve
 RUN wget ${mvn_url}/org/postgresql/postgresql/${pg_driver_version}/postgresql-${pg_driver_version}.jar -P $METASTORE_HOME/lib/ && \
     wget ${mvn_url}/joda-time/joda-time/${joda_version}/joda-time-${joda_version}.jar -P ${METASTORE_HOME}/lib/
 
-RUN cd $METASTORE_HOME && \
-    wget --quiet $jmx_exporter_bin && \
-    mv jmx_prometheus_javaagent-${jmx_exporter_version}.jar jmx_exporter.jar
-
 WORKDIR $METASTORE_HOME
+
+RUN wget -q $jmx_exporter_bin -O jmx_exporter.jar 

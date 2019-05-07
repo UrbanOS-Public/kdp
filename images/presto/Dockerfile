@@ -12,9 +12,9 @@ USER root
 
 RUN apt update && \
     apt install -y --allow-unauthenticated \
-        curl \
-        less \
-        wget && \
+    curl \
+    less \
+    wget && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
 ENV PRESTO_HOME=/presto
@@ -23,10 +23,10 @@ ENV PRESTO_USER=presto \
     PATH=$PATH:$PRESTO_HOME/bin
 
 RUN useradd \
-	--create-home \
-	--home-dir ${PRESTO_HOME} \
+    --create-home \
+    --home-dir ${PRESTO_HOME} \
     --shell /bin/bash \
-	$PRESTO_USER
+    $PRESTO_USER
 
 RUN mkdir -p $PRESTO_HOME && \
     wget --quiet $presto_bin && \
@@ -37,24 +37,22 @@ RUN mkdir -p $PRESTO_HOME && \
     mkdir -p ${PRESTO_CONF_DIR}/catalog/ && \
     mkdir -p ${PRESTO_HOME}/data && \
     cd ${PRESTO_HOME}/bin && \
-    wget --quiet ${presto_cli_bin} && \
-    mv presto-cli-${presto_version}-executable.jar presto && \
+    wget --quiet -O presto ${presto_cli_bin} && \
     chmod +x presto && \
     chown -R ${PRESTO_USER}:${PRESTO_USER} $PRESTO_HOME
 
 RUN cd $PRESTO_HOME && \
-    wget --quiet $jmx_exporter_bin && \
-    mv jmx_prometheus_javaagent-${jmx_exporter_version}.jar jmx_exporter.jar && \
+    wget -q $jmx_exporter_bin -O jmx_exporter.jar && \
     chown ${PRESTO_USER}:${PRESTO_USER} jmx_exporter.jar
 
 # Need to work with python2
 # See: https://github.com/prestodb/presto/issues/4678
 ENV PYTHON2_DEBIAN_VERSION=2.7.13-2
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		python="${PYTHON2_DEBIAN_VERSION}" \
-	&& rm -rf /var/lib/apt/lists/* \
+    python="${PYTHON2_DEBIAN_VERSION}" \
+    && rm -rf /var/lib/apt/lists/* \
     && cd /usr/local/bin \
-	&& rm -rf idle pydoc python python-config
+    && rm -rf idle pydoc python python-config
 
 USER $PRESTO_USER
 

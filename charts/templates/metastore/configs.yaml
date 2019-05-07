@@ -8,6 +8,3 @@ metadata:
 data:
   jmx_exporter_config.yaml: |
     {}
-
-  log.properties: |
-    com.facebook.presto={{ .Values.presto.logLevel }}
