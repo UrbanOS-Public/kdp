@@ -22,6 +22,8 @@ spec:
         checksum/worker-configmap: {{ include (print $.Template.BasePath "/presto/worker-config.yaml") . | sha256sum }}
         checksum/common-configmap: {{ include (print $.Template.BasePath "/presto/presto-configs.yaml") . | sha256sum }}
         checksum/core-site-configmap: {{ include (print $.Template.BasePath "/shared-configs/core-site.yaml") . | sha256sum }}
+        prometheus.io/port: "8181"
+        prometheus.io/scrape: "true"
       labels:
         component: presto
         role: worker
@@ -42,6 +44,9 @@ spec:
         - mountPath: /presto/etc/jvm.config
           name: presto-configs
           subPath: jvm.config
+        - mountPath: /presto/etc/jmx_exporter_config.yaml
+          name: presto-configs
+          subPath: jmx_exporter_config.yaml
         - mountPath: /presto/etc/config.properties
           name: worker-config
           subPath: config.properties
@@ -57,6 +62,9 @@ spec:
         - mountPath: /etc/hadoop/conf/core-site.xml
           name: core-site
           subPath: core-site.xml
+        ports:
+        - name: jmx-exporter
+          containerPort: 8181
         livenessProbe:
           exec:
             command:

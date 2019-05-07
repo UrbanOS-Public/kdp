@@ -6,12 +6,18 @@ metadata:
     component: presto
     role: coordinator
 {{ include "kdp.labels" . | indent 4 }}
+  annotations:
+    prometheus.io/port:  "9483"
+    prometheus.io/scrape: "true"
 spec:
   type: {{ .Values.presto.service.type }}
   ports:
   - port: {{ .Values.presto.service.port }}
     targetPort: http-coord
     name: http-coord
+  - port: 9483
+    targetPort: metric-port
+    name: metric-port
   selector:
     component: presto
     role: coordinator

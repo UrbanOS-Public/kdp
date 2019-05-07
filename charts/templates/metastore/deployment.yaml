@@ -18,6 +18,8 @@ spec:
       annotations:
         checksum/core-site-configmap: {{ include (print $.Template.BasePath "/shared-configs/core-site.yaml") . | sha256sum }}
         checksum/metastore-site-configmap: {{ include (print $.Template.BasePath "/metastore/metastore-site.yaml") . | sha256sum }}
+        prometheus.io/port: "8181"
+        prometheus.io/scrape: "true"
       labels:
         component: metastore
 {{ include "kdp.labels" . | indent 8 }}
@@ -51,6 +53,21 @@ spec:
         - mountPath: /opt/hadoop/etc/hadoop/core-site.xml
           name: core-site
           subPath: core-site.xml
+        - mountPath: /opt/hive-metastore/jmx_exporter_config.yaml
+          name: metastore-configs
+          subPath: jmx_exporter_config.yaml
+        env:
+        - name: HADOOP_OPTS
+          value: >
+            -server
+            -Xmx{{ .Values.presto.jvm.maxHeapSize }}
+            -XX:+{{ .Values.presto.jvm.gcMethod.type }}
+            -XX:G1HeapRegionSize={{ .Values.presto.jvm.gcMethod.g1.heapRegionSize }}
+            -XX:+UseGCOverheadLimit
+            -XX:+ExplicitGCInvokesConcurrent
+            -XX:+HeapDumpOnOutOfMemoryError
+            -XX:+ExitOnOutOfMemoryError
+            -javaagent:/opt/hive-metastore/jmx_exporter.jar=8181:/opt/hive-metastore/jmx_exporter_config.yaml
         resources:
 {{ toYaml .Values.metastore.deploy.container.resources | indent 10 }}
       volumes:
@@ -60,3 +77,6 @@ spec:
       - name: core-site
         configMap:
           name: {{ template "kdp.name" . }}-core-site
+      - name: metastore-configs
+        configMap:
+          name: {{ template "kdp.metastore.fullname" . }}-metastore-configs

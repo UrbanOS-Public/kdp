@@ -21,6 +21,8 @@ spec:
         checksum/coordinator-configmap: {{ include (print $.Template.BasePath "/presto/coordinator-config.yaml") . | sha256sum }}
         checksum/common-configmap: {{ include (print $.Template.BasePath "/presto/presto-configs.yaml") . | sha256sum }}
         checksum/core-site-configmap: {{ include (print $.Template.BasePath "/shared-configs/core-site.yaml") . | sha256sum }}
+        prometheus.io/port: "8181"
+        prometheus.io/scrape: "true"
       labels:
         component: presto
         role: coordinator
@@ -53,9 +55,14 @@ spec:
         - mountPath: /etc/hadoop/conf/core-site.xml
           name: core-site
           subPath: core-site.xml
+        - mountPath: /presto/etc/jmx_exporter_config.yaml
+          name: presto-configs
+          subPath: jmx_exporter_config.yaml
         ports:
         - name: http-coord
           containerPort: {{ .Values.presto.service.port }}
+        - name: jmx-exporter
+          containerPort: 8181
         livenessProbe:
           httpGet:
             path: /v1/cluster
@@ -66,6 +73,20 @@ spec:
             port: http-coord
         resources:
 {{ toYaml .Values.presto.deploy.container.resources | indent 10 }}
+      - name: presto-exporter
+        image: yahoojapan/presto-exporter:master
+        imagePullPolicy: {{ .Values.presto.deploy.container.pullPolicy }}
+        ports:
+          - name: metric-port
+            containerPort: 9483
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: metric-port
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: metric-port
       volumes:
       - name: presto-configs
         configMap:
