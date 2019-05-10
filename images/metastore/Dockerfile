@@ -12,8 +12,7 @@ ARG jmx_exporter_bin="https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prome
 
 
 ENV METASTORE_HOME=/opt/hive-metastore \
-    HADOOP_HOME=/opt/hadoop \
-    HADOOP_OPTS="-Xms768m -Xmx768m -XX:NewSize=300m"
+    HADOOP_HOME=/opt/hadoop
 RUN set -ex && \
     apk add --no-cache bash tini libc6-compat linux-pam && \
     mkdir -p /opt && \

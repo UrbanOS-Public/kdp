@@ -40,6 +40,12 @@ presto:
       alb.ingress.kubernetes.io/healthcheck-path: /v1/cluster
 
 metastore:
+  jvm:
+    maxHeapSize: 768M
+    gcMethod:
+      type: UseG1GC
+      g1:
+        heapRegionSize: 32M
   allowDropTable: false
   service:
     type: ClusterIP

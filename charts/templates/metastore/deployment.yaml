@@ -60,9 +60,9 @@ spec:
         - name: HADOOP_OPTS
           value: >
             -server
-            -Xmx{{ .Values.presto.jvm.maxHeapSize }}
-            -XX:+{{ .Values.presto.jvm.gcMethod.type }}
-            -XX:G1HeapRegionSize={{ .Values.presto.jvm.gcMethod.g1.heapRegionSize }}
+            -Xmx{{ .Values.metastore.jvm.maxHeapSize }}
+            -XX:+{{ .Values.metastore.jvm.gcMethod.type }}
+            -XX:G1HeapRegionSize={{ .Values.metastore.jvm.gcMethod.g1.heapRegionSize }}
             -XX:+UseGCOverheadLimit
             -XX:+ExplicitGCInvokesConcurrent
             -XX:+HeapDumpOnOutOfMemoryError
