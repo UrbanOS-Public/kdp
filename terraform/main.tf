@@ -150,7 +150,9 @@ resource "aws_s3_bucket_policy" "presto_hive_storage" {
          },
          "Action": [
             "s3:GetObject",
-            "s3:PutObject"
+            "s3:PutObject",
+            "s3:DeleteObject",
+            "s3:DeleteObjectVersion"
          ],
          "Resource": "${aws_s3_bucket.presto_hive_storage.arn}/*"
       }
