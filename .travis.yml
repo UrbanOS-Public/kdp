@@ -1,0 +1,43 @@
+services:
+  - docker
+env:
+  - DOCKER_COMPOSE_VERSION=1.23.1
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+script:
+  - docker build -t metastore:build .
+  - docker build -t presto:build .
+  - docker build -t presto-testo:build .
+  - docker build -t metastore-testo:build .
+  - docker build -t postgres-testo:build .
+  - docker build -t minio-testo:build .
+deploy:
+- provider: script
+  skip_cleanup: true
+  script:
+    - bash scripts/deploy.sh metastore master
+    - bash scripts/deploy.sh presto master
+    - bash scripts/deploy.sh presto-testo master
+    - bash scripts/deploy.sh metastore-testo master
+    - bash scripts/deploy.sh postgres-testo master
+    - bash scripts/deploy.sh minio-testo master
+  on:
+    branch: master
+- provider: script
+  skip_cleanup: true
+  script:
+    - bash scripts/deploy.sh metastore release
+    - bash scripts/deploy.sh presto release
+    - bash scripts/deploy.sh presto-testo release
+    - bash scripts/deploy.sh metastore-testo release
+    - bash scripts/deploy.sh postgres-testo release
+    - bash scripts/deploy.sh minio-testo release
+  on:
+    tags: true
+branches:
+  only:
+  - master
+  - /\d{1,3}\.\d{1,3}\.\d{1,3}/
