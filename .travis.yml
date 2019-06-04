@@ -14,6 +14,7 @@ script:
   - docker build -t metastore-testo:build images/metastore-testo
   - docker build -t postgres-testo:build images/postgres-testo
   - docker build -t minio-testo:build images/minio-testo
+  - docker images
 deploy:
 - provider: script
   skip_cleanup: true
