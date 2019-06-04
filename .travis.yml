@@ -8,12 +8,12 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 script:
-  - docker build -t metastore:build .
-  - docker build -t presto:build .
-  - docker build -t presto-testo:build .
-  - docker build -t metastore-testo:build .
-  - docker build -t postgres-testo:build .
-  - docker build -t minio-testo:build .
+  - docker build -t metastore:build images/metastore
+  - docker build -t presto:build images/presto
+  - docker build -t presto-testo:build images/presto-testo
+  - docker build -t metastore-testo:build images/metastore-testo
+  - docker build -t postgres-testo:build images/postgres-testo
+  - docker build -t minio-testo:build images/minio-testo
 deploy:
 - provider: script
   skip_cleanup: true
