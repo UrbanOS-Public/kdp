@@ -19,23 +19,23 @@ deploy:
 - provider: script
   skip_cleanup: true
   script:
-    - bash scripts/deploy.sh metastore master
-    - bash scripts/deploy.sh presto master
-    - bash scripts/deploy.sh presto-testo master
-    - bash scripts/deploy.sh metastore-testo master
-    - bash scripts/deploy.sh postgres-testo master
-    - bash scripts/deploy.sh minio-testo master
+    ./scripts/deploy.sh metastore master;
+    ./scripts/deploy.sh presto master;
+    ./scripts/deploy.sh presto-testo master;
+    ./scripts/deploy.sh metastore-testo master;
+    ./scripts/deploy.sh postgres-testo master;
+    ./scripts/deploy.sh minio-testo master;
   on:
     branch: master
 - provider: script
   skip_cleanup: true
   script:
-    - bash scripts/deploy.sh metastore release
-    - bash scripts/deploy.sh presto release
-    - bash scripts/deploy.sh presto-testo release
-    - bash scripts/deploy.sh metastore-testo release
-    - bash scripts/deploy.sh postgres-testo release
-    - bash scripts/deploy.sh minio-testo release
+    ./scripts/deploy.sh metastore release;
+    ./scripts/deploy.sh presto release;
+    ./scripts/deploy.sh presto-testo release;
+    ./scripts/deploy.sh metastore-testo release;
+    ./scripts/deploy.sh postgres-testo release;
+    ./scripts/deploy.sh minio-testo release;
   on:
     tags: true
 branches:
