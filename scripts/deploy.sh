@@ -18,5 +18,5 @@ fi
 
 echo "Pushing to Dockerhub with tag ${TAGGED_IMAGE} ..."
 
-docker tag kdp:build "${TAGGED_IMAGE}"
+docker tag ${IMAGE}:build "${TAGGED_IMAGE}"
 docker push "${TAGGED_IMAGE}"
