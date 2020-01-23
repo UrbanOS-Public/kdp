@@ -1,7 +1,7 @@
 FROM openjdk:8-jre-slim
 
 ARG mirror="https://repo1.maven.org/maven2/com/facebook/presto"
-ARG presto_version="0.215"
+ARG presto_version="0.230"
 ARG presto_bin="${mirror}/presto-server/${presto_version}/presto-server-${presto_version}.tar.gz"
 ARG presto_cli_bin="${mirror}/presto-cli/${presto_version}/presto-cli-${presto_version}-executable.jar"
 
@@ -47,7 +47,7 @@ RUN cd $PRESTO_HOME && \
 
 # Need to work with python2
 # See: https://github.com/prestodb/presto/issues/4678
-ENV PYTHON2_DEBIAN_VERSION=2.7.16-1 
+ENV PYTHON2_DEBIAN_VERSION=2.7.16-1
 RUN apt-get update && apt-get install -y --no-install-recommends \
   python="${PYTHON2_DEBIAN_VERSION}" \
   && rm -rf /var/lib/apt/lists/* \
