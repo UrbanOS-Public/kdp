@@ -5,7 +5,7 @@ ARG joda_version=2.9.9
 ARG metastore_version=3.0.0
 ARG pg_driver_version=42.2.5
 ARG apache_url=http://archive.apache.org/dist
-ARG mvn_url=http://central.maven.org/maven2
+ARG mvn_url=https://central.maven.org/maven2
 
 ARG jmx_exporter_version="0.11.0"
 ARG jmx_exporter_bin="https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${jmx_exporter_version}/jmx_prometheus_javaagent-${jmx_exporter_version}.jar"
@@ -37,4 +37,4 @@ RUN wget ${mvn_url}/org/postgresql/postgresql/${pg_driver_version}/postgresql-${
 
 WORKDIR $METASTORE_HOME
 
-RUN wget -q $jmx_exporter_bin -O jmx_exporter.jar 
+RUN wget -q $jmx_exporter_bin -O jmx_exporter.jar
