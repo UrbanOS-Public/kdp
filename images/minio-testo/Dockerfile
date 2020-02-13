@@ -1,5 +1,9 @@
-FROM minio/minio:RELEASE.2019-01-16T21-44-08Z
+FROM minio/minio:RELEASE.2020-02-07T23-28-16Z
+
+RUN apk add inotify-tools
 
 COPY kdp /kdp
 
-CMD ["server", "/kdp"]
+ENTRYPOINT []
+
+CMD ["/kdp/start-minio.sh"]
