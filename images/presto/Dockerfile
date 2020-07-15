@@ -1,7 +1,7 @@
 FROM openjdk:8-jre-slim
 
 ARG mirror="https://repo1.maven.org/maven2/com/facebook/presto"
-ARG presto_version="0.230"
+ARG presto_version="0.237"
 ARG presto_bin="${mirror}/presto-server/${presto_version}/presto-server-${presto_version}.tar.gz"
 ARG presto_cli_bin="${mirror}/presto-cli/${presto_version}/presto-cli-${presto_version}-executable.jar"
 
