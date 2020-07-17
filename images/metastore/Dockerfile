@@ -14,7 +14,7 @@ ARG jmx_exporter_bin="https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prome
 ENV METASTORE_HOME=/opt/hive-metastore \
     HADOOP_HOME=/opt/hadoop
 RUN set -ex && \
-    apk add --no-cache bash tini libc6-compat linux-pam && \
+    apk add --no-cache bash tini libc6-compat linux-pam curl ca-certificates && \
     mkdir -p /opt && \
     rm /bin/sh && \
     ln -sv /bin/bash /bin/sh
@@ -38,3 +38,8 @@ RUN wget ${mvn_url}/org/postgresql/postgresql/${pg_driver_version}/postgresql-${
 WORKDIR $METASTORE_HOME
 
 RUN wget -q $jmx_exporter_bin -O jmx_exporter.jar
+
+RUN curl -L \
+    -o /usr/local/share/ca-certificates/rds-ca-2019-root.crt \
+    https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
+    && update-ca-certificates
