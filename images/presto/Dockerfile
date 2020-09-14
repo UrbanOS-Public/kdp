@@ -1,11 +1,11 @@
 FROM openjdk:8-jre-slim
 
 ARG mirror="https://repo1.maven.org/maven2/com/facebook/presto"
-ARG presto_version="0.237"
+ARG presto_version="0.240"
 ARG presto_bin="${mirror}/presto-server/${presto_version}/presto-server-${presto_version}.tar.gz"
 ARG presto_cli_bin="${mirror}/presto-cli/${presto_version}/presto-cli-${presto_version}-executable.jar"
 
-ARG jmx_exporter_version="0.11.0"
+ARG jmx_exporter_version="0.14.0"
 ARG jmx_exporter_bin="https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${jmx_exporter_version}/jmx_prometheus_javaagent-${jmx_exporter_version}.jar"
 
 USER root
