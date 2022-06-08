@@ -54,6 +54,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && cd /usr/local/bin \
   && rm -rf idle pydoc python python-config
 
+RUN chgrp -R 0 ${PRESTO_HOME} && \
+    chmod -R g+rwX ${PRESTO_HOME}
+
 USER $PRESTO_USER
 
 CMD ["launcher", "run"]

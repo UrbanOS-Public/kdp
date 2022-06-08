@@ -42,4 +42,15 @@ RUN wget -q $jmx_exporter_bin -O jmx_exporter.jar
 RUN curl -L \
     -o /usr/local/share/ca-certificates/rds-ca-2019-root.crt \
     https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
-    && update-ca-certificates
+    && update-ca-certificates \
+    && rm /etc/ssl/cert.pem \
+    && ln -s /etc/ssl/certs/ca-certificates.crt /etc/ssl/cert.pem
+
+RUN chgrp -R 0 ${METASTORE_HOME} && \
+    chmod -R g+rwX ${METASTORE_HOME}
+
+RUN chgrp -R 0 ${HADOOP_HOME} && \
+    chmod -R g+rwX ${HADOOP_HOME}
+
+RUN chgrp -R 0 /etc/ssl/certs && \
+    chmod -R g+rwX /etc/ssl/certs
